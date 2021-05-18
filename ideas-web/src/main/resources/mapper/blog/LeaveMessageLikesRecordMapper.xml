@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenhao.dao.mapper.LeaveMessageLikesRecordMapper">
+  <resultMap id="BaseResultMap" type="com.chenhao.dao.entity.LeaveMessageLikesRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pageName" jdbcType="VARCHAR" property="pagename" />
+    <result column="pId" jdbcType="INTEGER" property="pid" />
+    <result column="likerId" jdbcType="INTEGER" property="likerid" />
+    <result column="likeDate" jdbcType="VARCHAR" property="likedate" />
+    <result column="is_active" jdbcType="INTEGER" property="isActive" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, pageName, pId, likerId, likeDate, is_active
+  </sql>
+  <select id="selectByExample" parameterType="com.chenhao.dao.entity.LeaveMessageLikesRecordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from leave_message_likes_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from leave_message_likes_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from leave_message_likes_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.chenhao.dao.entity.LeaveMessageLikesRecordExample">
+    delete from leave_message_likes_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.chenhao.dao.entity.LeaveMessageLikesRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into leave_message_likes_record (pageName, pId, likerId, 
+      likeDate, is_active)
+    values (#{pagename,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{likerid,jdbcType=INTEGER}, 
+      #{likedate,jdbcType=VARCHAR}, #{isActive,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chenhao.dao.entity.LeaveMessageLikesRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into leave_message_likes_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pagename != null">
+        pageName,
+      </if>
+      <if test="pid != null">
+        pId,
+      </if>
+      <if test="likerid != null">
+        likerId,
+      </if>
+      <if test="likedate != null">
+        likeDate,
+      </if>
+      <if test="isActive != null">
+        is_active,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pagename != null">
+        #{pagename,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="likerid != null">
+        #{likerid,jdbcType=INTEGER},
+      </if>
+      <if test="likedate != null">
+        #{likedate,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.chenhao.dao.entity.LeaveMessageLikesRecordExample" resultType="java.lang.Long">
+    select count(*) from leave_message_likes_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update leave_message_likes_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.pagename != null">
+        pageName = #{record.pagename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pid != null">
+        pId = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.likerid != null">
+        likerId = #{record.likerid,jdbcType=INTEGER},
+      </if>
+      <if test="record.likedate != null">
+        likeDate = #{record.likedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isActive != null">
+        is_active = #{record.isActive,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update leave_message_likes_record
+    set id = #{record.id,jdbcType=INTEGER},
+      pageName = #{record.pagename,jdbcType=VARCHAR},
+      pId = #{record.pid,jdbcType=INTEGER},
+      likerId = #{record.likerid,jdbcType=INTEGER},
+      likeDate = #{record.likedate,jdbcType=VARCHAR},
+      is_active = #{record.isActive,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenhao.dao.entity.LeaveMessageLikesRecord">
+    update leave_message_likes_record
+    <set>
+      <if test="pagename != null">
+        pageName = #{pagename,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        pId = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="likerid != null">
+        likerId = #{likerid,jdbcType=INTEGER},
+      </if>
+      <if test="likedate != null">
+        likeDate = #{likedate,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        is_active = #{isActive,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenhao.dao.entity.LeaveMessageLikesRecord">
+    update leave_message_likes_record
+    set pageName = #{pagename,jdbcType=VARCHAR},
+      pId = #{pid,jdbcType=INTEGER},
+      likerId = #{likerid,jdbcType=INTEGER},
+      likeDate = #{likedate,jdbcType=VARCHAR},
+      is_active = #{isActive,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenhao.dao.mapper.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.chenhao.dao.entity.Article">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="articleId" jdbcType="BIGINT" property="articleid" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="originalAuthor" jdbcType="VARCHAR" property="originalauthor" />
+    <result column="articleTitle" jdbcType="VARCHAR" property="articletitle" />
+    <result column="articleTags" jdbcType="VARCHAR" property="articletags" />
+    <result column="articleType" jdbcType="VARCHAR" property="articletype" />
+    <result column="articleCategories" jdbcType="VARCHAR" property="articlecategories" />
+    <result column="publishDate" jdbcType="VARCHAR" property="publishdate" />
+    <result column="updateDate" jdbcType="VARCHAR" property="updatedate" />
+    <result column="articleUrl" jdbcType="VARCHAR" property="articleurl" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+    <result column="lastArticleId" jdbcType="BIGINT" property="lastarticleid" />
+    <result column="nextArticleId" jdbcType="BIGINT" property="nextarticleid" />
+    <result column="is_active" jdbcType="INTEGER" property="isActive" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.chenhao.dao.entity.Article">
+    <result column="articleContent" jdbcType="LONGVARCHAR" property="articlecontent" />
+    <result column="articleTabloid" jdbcType="LONGVARCHAR" property="articletabloid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, articleId, author, originalAuthor, articleTitle, articleTags, articleType, articleCategories, 
+    publishDate, updateDate, articleUrl, likes, lastArticleId, nextArticleId, is_active
+  </sql>
+  <sql id="Blob_Column_List">
+    articleContent, articleTabloid
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.chenhao.dao.entity.ArticleExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.chenhao.dao.entity.ArticleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.chenhao.dao.entity.ArticleExample">
+    delete from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.chenhao.dao.entity.Article">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into article (articleId, author, originalAuthor, 
+      articleTitle, articleTags, articleType, 
+      articleCategories, publishDate, updateDate, 
+      articleUrl, likes, lastArticleId, 
+      nextArticleId, is_active, articleContent, 
+      articleTabloid)
+    values (#{articleid,jdbcType=BIGINT}, #{author,jdbcType=VARCHAR}, #{originalauthor,jdbcType=VARCHAR}, 
+      #{articletitle,jdbcType=VARCHAR}, #{articletags,jdbcType=VARCHAR}, #{articletype,jdbcType=VARCHAR}, 
+      #{articlecategories,jdbcType=VARCHAR}, #{publishdate,jdbcType=VARCHAR}, #{updatedate,jdbcType=VARCHAR}, 
+      #{articleurl,jdbcType=VARCHAR}, #{likes,jdbcType=INTEGER}, #{lastarticleid,jdbcType=BIGINT}, 
+      #{nextarticleid,jdbcType=BIGINT}, #{isActive,jdbcType=INTEGER}, #{articlecontent,jdbcType=LONGVARCHAR}, 
+      #{articletabloid,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chenhao.dao.entity.Article">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleid != null">
+        articleId,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="originalauthor != null">
+        originalAuthor,
+      </if>
+      <if test="articletitle != null">
+        articleTitle,
+      </if>
+      <if test="articletags != null">
+        articleTags,
+      </if>
+      <if test="articletype != null">
+        articleType,
+      </if>
+      <if test="articlecategories != null">
+        articleCategories,
+      </if>
+      <if test="publishdate != null">
+        publishDate,
+      </if>
+      <if test="updatedate != null">
+        updateDate,
+      </if>
+      <if test="articleurl != null">
+        articleUrl,
+      </if>
+      <if test="likes != null">
+        likes,
+      </if>
+      <if test="lastarticleid != null">
+        lastArticleId,
+      </if>
+      <if test="nextarticleid != null">
+        nextArticleId,
+      </if>
+      <if test="isActive != null">
+        is_active,
+      </if>
+      <if test="articlecontent != null">
+        articleContent,
+      </if>
+      <if test="articletabloid != null">
+        articleTabloid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleid != null">
+        #{articleid,jdbcType=BIGINT},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="originalauthor != null">
+        #{originalauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="articletitle != null">
+        #{articletitle,jdbcType=VARCHAR},
+      </if>
+      <if test="articletags != null">
+        #{articletags,jdbcType=VARCHAR},
+      </if>
+      <if test="articletype != null">
+        #{articletype,jdbcType=VARCHAR},
+      </if>
+      <if test="articlecategories != null">
+        #{articlecategories,jdbcType=VARCHAR},
+      </if>
+      <if test="publishdate != null">
+        #{publishdate,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null">
+        #{updatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="articleurl != null">
+        #{articleurl,jdbcType=VARCHAR},
+      </if>
+      <if test="likes != null">
+        #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="lastarticleid != null">
+        #{lastarticleid,jdbcType=BIGINT},
+      </if>
+      <if test="nextarticleid != null">
+        #{nextarticleid,jdbcType=BIGINT},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=INTEGER},
+      </if>
+      <if test="articlecontent != null">
+        #{articlecontent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="articletabloid != null">
+        #{articletabloid,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.chenhao.dao.entity.ArticleExample" resultType="java.lang.Long">
+    select count(*) from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.articleid != null">
+        articleId = #{record.articleid,jdbcType=BIGINT},
+      </if>
+      <if test="record.author != null">
+        author = #{record.author,jdbcType=VARCHAR},
+      </if>
+      <if test="record.originalauthor != null">
+        originalAuthor = #{record.originalauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articletitle != null">
+        articleTitle = #{record.articletitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articletags != null">
+        articleTags = #{record.articletags,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articletype != null">
+        articleType = #{record.articletype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articlecategories != null">
+        articleCategories = #{record.articlecategories,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publishdate != null">
+        publishDate = #{record.publishdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updatedate != null">
+        updateDate = #{record.updatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articleurl != null">
+        articleUrl = #{record.articleurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.likes != null">
+        likes = #{record.likes,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastarticleid != null">
+        lastArticleId = #{record.lastarticleid,jdbcType=BIGINT},
+      </if>
+      <if test="record.nextarticleid != null">
+        nextArticleId = #{record.nextarticleid,jdbcType=BIGINT},
+      </if>
+      <if test="record.isActive != null">
+        is_active = #{record.isActive,jdbcType=INTEGER},
+      </if>
+      <if test="record.articlecontent != null">
+        articleContent = #{record.articlecontent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.articletabloid != null">
+        articleTabloid = #{record.articletabloid,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update article
+    set id = #{record.id,jdbcType=INTEGER},
+      articleId = #{record.articleid,jdbcType=BIGINT},
+      author = #{record.author,jdbcType=VARCHAR},
+      originalAuthor = #{record.originalauthor,jdbcType=VARCHAR},
+      articleTitle = #{record.articletitle,jdbcType=VARCHAR},
+      articleTags = #{record.articletags,jdbcType=VARCHAR},
+      articleType = #{record.articletype,jdbcType=VARCHAR},
+      articleCategories = #{record.articlecategories,jdbcType=VARCHAR},
+      publishDate = #{record.publishdate,jdbcType=VARCHAR},
+      updateDate = #{record.updatedate,jdbcType=VARCHAR},
+      articleUrl = #{record.articleurl,jdbcType=VARCHAR},
+      likes = #{record.likes,jdbcType=INTEGER},
+      lastArticleId = #{record.lastarticleid,jdbcType=BIGINT},
+      nextArticleId = #{record.nextarticleid,jdbcType=BIGINT},
+      is_active = #{record.isActive,jdbcType=INTEGER},
+      articleContent = #{record.articlecontent,jdbcType=LONGVARCHAR},
+      articleTabloid = #{record.articletabloid,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article
+    set id = #{record.id,jdbcType=INTEGER},
+      articleId = #{record.articleid,jdbcType=BIGINT},
+      author = #{record.author,jdbcType=VARCHAR},
+      originalAuthor = #{record.originalauthor,jdbcType=VARCHAR},
+      articleTitle = #{record.articletitle,jdbcType=VARCHAR},
+      articleTags = #{record.articletags,jdbcType=VARCHAR},
+      articleType = #{record.articletype,jdbcType=VARCHAR},
+      articleCategories = #{record.articlecategories,jdbcType=VARCHAR},
+      publishDate = #{record.publishdate,jdbcType=VARCHAR},
+      updateDate = #{record.updatedate,jdbcType=VARCHAR},
+      articleUrl = #{record.articleurl,jdbcType=VARCHAR},
+      likes = #{record.likes,jdbcType=INTEGER},
+      lastArticleId = #{record.lastarticleid,jdbcType=BIGINT},
+      nextArticleId = #{record.nextarticleid,jdbcType=BIGINT},
+      is_active = #{record.isActive,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenhao.dao.entity.Article">
+    update article
+    <set>
+      <if test="articleid != null">
+        articleId = #{articleid,jdbcType=BIGINT},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="originalauthor != null">
+        originalAuthor = #{originalauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="articletitle != null">
+        articleTitle = #{articletitle,jdbcType=VARCHAR},
+      </if>
+      <if test="articletags != null">
+        articleTags = #{articletags,jdbcType=VARCHAR},
+      </if>
+      <if test="articletype != null">
+        articleType = #{articletype,jdbcType=VARCHAR},
+      </if>
+      <if test="articlecategories != null">
+        articleCategories = #{articlecategories,jdbcType=VARCHAR},
+      </if>
+      <if test="publishdate != null">
+        publishDate = #{publishdate,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null">
+        updateDate = #{updatedate,jdbcType=VARCHAR},
+      </if>
+      <if test="articleurl != null">
+        articleUrl = #{articleurl,jdbcType=VARCHAR},
+      </if>
+      <if test="likes != null">
+        likes = #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="lastarticleid != null">
+        lastArticleId = #{lastarticleid,jdbcType=BIGINT},
+      </if>
+      <if test="nextarticleid != null">
+        nextArticleId = #{nextarticleid,jdbcType=BIGINT},
+      </if>
+      <if test="isActive != null">
+        is_active = #{isActive,jdbcType=INTEGER},
+      </if>
+      <if test="articlecontent != null">
+        articleContent = #{articlecontent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="articletabloid != null">
+        articleTabloid = #{articletabloid,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chenhao.dao.entity.Article">
+    update article
+    set articleId = #{articleid,jdbcType=BIGINT},
+      author = #{author,jdbcType=VARCHAR},
+      originalAuthor = #{originalauthor,jdbcType=VARCHAR},
+      articleTitle = #{articletitle,jdbcType=VARCHAR},
+      articleTags = #{articletags,jdbcType=VARCHAR},
+      articleType = #{articletype,jdbcType=VARCHAR},
+      articleCategories = #{articlecategories,jdbcType=VARCHAR},
+      publishDate = #{publishdate,jdbcType=VARCHAR},
+      updateDate = #{updatedate,jdbcType=VARCHAR},
+      articleUrl = #{articleurl,jdbcType=VARCHAR},
+      likes = #{likes,jdbcType=INTEGER},
+      lastArticleId = #{lastarticleid,jdbcType=BIGINT},
+      nextArticleId = #{nextarticleid,jdbcType=BIGINT},
+      is_active = #{isActive,jdbcType=INTEGER},
+      articleContent = #{articlecontent,jdbcType=LONGVARCHAR},
+      articleTabloid = #{articletabloid,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenhao.dao.entity.Article">
+    update article
+    set articleId = #{articleid,jdbcType=BIGINT},
+      author = #{author,jdbcType=VARCHAR},
+      originalAuthor = #{originalauthor,jdbcType=VARCHAR},
+      articleTitle = #{articletitle,jdbcType=VARCHAR},
+      articleTags = #{articletags,jdbcType=VARCHAR},
+      articleType = #{articletype,jdbcType=VARCHAR},
+      articleCategories = #{articlecategories,jdbcType=VARCHAR},
+      publishDate = #{publishdate,jdbcType=VARCHAR},
+      updateDate = #{updatedate,jdbcType=VARCHAR},
+      articleUrl = #{articleurl,jdbcType=VARCHAR},
+      likes = #{likes,jdbcType=INTEGER},
+      lastArticleId = #{lastarticleid,jdbcType=BIGINT},
+      nextArticleId = #{nextarticleid,jdbcType=BIGINT},
+      is_active = #{isActive,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

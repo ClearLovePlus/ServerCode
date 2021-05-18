@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenhao.dao.mapper.LeaveMessageRecordMapper">
+  <resultMap id="BaseResultMap" type="com.chenhao.dao.entity.LeaveMessageRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pageName" jdbcType="VARCHAR" property="pagename" />
+    <result column="pId" jdbcType="INTEGER" property="pid" />
+    <result column="answererId" jdbcType="INTEGER" property="answererid" />
+    <result column="respondentId" jdbcType="INTEGER" property="respondentid" />
+    <result column="leaveMessageDate" jdbcType="VARCHAR" property="leavemessagedate" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+    <result column="isRead" jdbcType="BIT" property="isread" />
+    <result column="is_active" jdbcType="INTEGER" property="isActive" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.chenhao.dao.entity.LeaveMessageRecord">
+    <result column="leaveMessageContent" jdbcType="LONGVARCHAR" property="leavemessagecontent" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, pageName, pId, answererId, respondentId, leaveMessageDate, likes, isRead, is_active
+  </sql>
+  <sql id="Blob_Column_List">
+    leaveMessageContent
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.chenhao.dao.entity.LeaveMessageRecordExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from leave_message_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.chenhao.dao.entity.LeaveMessageRecordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from leave_message_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from leave_message_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from leave_message_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.chenhao.dao.entity.LeaveMessageRecordExample">
+    delete from leave_message_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.chenhao.dao.entity.LeaveMessageRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into leave_message_record (pageName, pId, answererId, 
+      respondentId, leaveMessageDate, likes, 
+      isRead, is_active, leaveMessageContent
+      )
+    values (#{pagename,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{answererid,jdbcType=INTEGER}, 
+      #{respondentid,jdbcType=INTEGER}, #{leavemessagedate,jdbcType=VARCHAR}, #{likes,jdbcType=INTEGER}, 
+      #{isread,jdbcType=BIT}, #{isActive,jdbcType=INTEGER}, #{leavemessagecontent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chenhao.dao.entity.LeaveMessageRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into leave_message_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pagename != null">
+        pageName,
+      </if>
+      <if test="pid != null">
+        pId,
+      </if>
+      <if test="answererid != null">
+        answererId,
+      </if>
+      <if test="respondentid != null">
+        respondentId,
+      </if>
+      <if test="leavemessagedate != null">
+        leaveMessageDate,
+      </if>
+      <if test="likes != null">
+        likes,
+      </if>
+      <if test="isread != null">
+        isRead,
+      </if>
+      <if test="isActive != null">
+        is_active,
+      </if>
+      <if test="leavemessagecontent != null">
+        leaveMessageContent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pagename != null">
+        #{pagename,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="answererid != null">
+        #{answererid,jdbcType=INTEGER},
+      </if>
+      <if test="respondentid != null">
+        #{respondentid,jdbcType=INTEGER},
+      </if>
+      <if test="leavemessagedate != null">
+        #{leavemessagedate,jdbcType=VARCHAR},
+      </if>
+      <if test="likes != null">
+        #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="isread != null">
+        #{isread,jdbcType=BIT},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=INTEGER},
+      </if>
+      <if test="leavemessagecontent != null">
+        #{leavemessagecontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.chenhao.dao.entity.LeaveMessageRecordExample" resultType="java.lang.Long">
+    select count(*) from leave_message_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update leave_message_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.pagename != null">
+        pageName = #{record.pagename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pid != null">
+        pId = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.answererid != null">
+        answererId = #{record.answererid,jdbcType=INTEGER},
+      </if>
+      <if test="record.respondentid != null">
+        respondentId = #{record.respondentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.leavemessagedate != null">
+        leaveMessageDate = #{record.leavemessagedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.likes != null">
+        likes = #{record.likes,jdbcType=INTEGER},
+      </if>
+      <if test="record.isread != null">
+        isRead = #{record.isread,jdbcType=BIT},
+      </if>
+      <if test="record.isActive != null">
+        is_active = #{record.isActive,jdbcType=INTEGER},
+      </if>
+      <if test="record.leavemessagecontent != null">
+        leaveMessageContent = #{record.leavemessagecontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update leave_message_record
+    set id = #{record.id,jdbcType=INTEGER},
+      pageName = #{record.pagename,jdbcType=VARCHAR},
+      pId = #{record.pid,jdbcType=INTEGER},
+      answererId = #{record.answererid,jdbcType=INTEGER},
+      respondentId = #{record.respondentid,jdbcType=INTEGER},
+      leaveMessageDate = #{record.leavemessagedate,jdbcType=VARCHAR},
+      likes = #{record.likes,jdbcType=INTEGER},
+      isRead = #{record.isread,jdbcType=BIT},
+      is_active = #{record.isActive,jdbcType=INTEGER},
+      leaveMessageContent = #{record.leavemessagecontent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update leave_message_record
+    set id = #{record.id,jdbcType=INTEGER},
+      pageName = #{record.pagename,jdbcType=VARCHAR},
+      pId = #{record.pid,jdbcType=INTEGER},
+      answererId = #{record.answererid,jdbcType=INTEGER},
+      respondentId = #{record.respondentid,jdbcType=INTEGER},
+      leaveMessageDate = #{record.leavemessagedate,jdbcType=VARCHAR},
+      likes = #{record.likes,jdbcType=INTEGER},
+      isRead = #{record.isread,jdbcType=BIT},
+      is_active = #{record.isActive,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenhao.dao.entity.LeaveMessageRecord">
+    update leave_message_record
+    <set>
+      <if test="pagename != null">
+        pageName = #{pagename,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        pId = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="answererid != null">
+        answererId = #{answererid,jdbcType=INTEGER},
+      </if>
+      <if test="respondentid != null">
+        respondentId = #{respondentid,jdbcType=INTEGER},
+      </if>
+      <if test="leavemessagedate != null">
+        leaveMessageDate = #{leavemessagedate,jdbcType=VARCHAR},
+      </if>
+      <if test="likes != null">
+        likes = #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="isread != null">
+        isRead = #{isread,jdbcType=BIT},
+      </if>
+      <if test="isActive != null">
+        is_active = #{isActive,jdbcType=INTEGER},
+      </if>
+      <if test="leavemessagecontent != null">
+        leaveMessageContent = #{leavemessagecontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chenhao.dao.entity.LeaveMessageRecord">
+    update leave_message_record
+    set pageName = #{pagename,jdbcType=VARCHAR},
+      pId = #{pid,jdbcType=INTEGER},
+      answererId = #{answererid,jdbcType=INTEGER},
+      respondentId = #{respondentid,jdbcType=INTEGER},
+      leaveMessageDate = #{leavemessagedate,jdbcType=VARCHAR},
+      likes = #{likes,jdbcType=INTEGER},
+      isRead = #{isread,jdbcType=BIT},
+      is_active = #{isActive,jdbcType=INTEGER},
+      leaveMessageContent = #{leavemessagecontent,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenhao.dao.entity.LeaveMessageRecord">
+    update leave_message_record
+    set pageName = #{pagename,jdbcType=VARCHAR},
+      pId = #{pid,jdbcType=INTEGER},
+      answererId = #{answererid,jdbcType=INTEGER},
+      respondentId = #{respondentid,jdbcType=INTEGER},
+      leaveMessageDate = #{leavemessagedate,jdbcType=VARCHAR},
+      likes = #{likes,jdbcType=INTEGER},
+      isRead = #{isread,jdbcType=BIT},
+      is_active = #{isActive,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

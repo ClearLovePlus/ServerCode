@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenhao.dao.mapper.PrivateWordMapper">
+  <resultMap id="BaseResultMap" type="com.chenhao.dao.entity.PrivateWord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="privateWord" jdbcType="VARCHAR" property="privateword" />
+    <result column="publisherId" jdbcType="VARCHAR" property="publisherid" />
+    <result column="replierId" jdbcType="VARCHAR" property="replierid" />
+    <result column="replyContent" jdbcType="VARCHAR" property="replycontent" />
+    <result column="publisherDate" jdbcType="VARCHAR" property="publisherdate" />
+    <result column="is_active" jdbcType="INTEGER" property="isActive" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, privateWord, publisherId, replierId, replyContent, publisherDate, is_active
+  </sql>
+  <select id="selectByExample" parameterType="com.chenhao.dao.entity.PrivateWordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from privateword
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from privateword
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from privateword
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.chenhao.dao.entity.PrivateWordExample">
+    delete from privateword
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.chenhao.dao.entity.PrivateWord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into privateword (privateWord, publisherId, replierId, 
+      replyContent, publisherDate, is_active
+      )
+    values (#{privateword,jdbcType=VARCHAR}, #{publisherid,jdbcType=VARCHAR}, #{replierid,jdbcType=VARCHAR}, 
+      #{replycontent,jdbcType=VARCHAR}, #{publisherdate,jdbcType=VARCHAR}, #{isActive,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chenhao.dao.entity.PrivateWord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into privateword
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="privateword != null">
+        privateWord,
+      </if>
+      <if test="publisherid != null">
+        publisherId,
+      </if>
+      <if test="replierid != null">
+        replierId,
+      </if>
+      <if test="replycontent != null">
+        replyContent,
+      </if>
+      <if test="publisherdate != null">
+        publisherDate,
+      </if>
+      <if test="isActive != null">
+        is_active,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="privateword != null">
+        #{privateword,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherid != null">
+        #{publisherid,jdbcType=VARCHAR},
+      </if>
+      <if test="replierid != null">
+        #{replierid,jdbcType=VARCHAR},
+      </if>
+      <if test="replycontent != null">
+        #{replycontent,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherdate != null">
+        #{publisherdate,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.chenhao.dao.entity.PrivateWordExample" resultType="java.lang.Long">
+    select count(*) from privateword
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update privateword
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.privateword != null">
+        privateWord = #{record.privateword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publisherid != null">
+        publisherId = #{record.publisherid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.replierid != null">
+        replierId = #{record.replierid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.replycontent != null">
+        replyContent = #{record.replycontent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publisherdate != null">
+        publisherDate = #{record.publisherdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isActive != null">
+        is_active = #{record.isActive,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update privateword
+    set id = #{record.id,jdbcType=INTEGER},
+      privateWord = #{record.privateword,jdbcType=VARCHAR},
+      publisherId = #{record.publisherid,jdbcType=VARCHAR},
+      replierId = #{record.replierid,jdbcType=VARCHAR},
+      replyContent = #{record.replycontent,jdbcType=VARCHAR},
+      publisherDate = #{record.publisherdate,jdbcType=VARCHAR},
+      is_active = #{record.isActive,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenhao.dao.entity.PrivateWord">
+    update privateword
+    <set>
+      <if test="privateword != null">
+        privateWord = #{privateword,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherid != null">
+        publisherId = #{publisherid,jdbcType=VARCHAR},
+      </if>
+      <if test="replierid != null">
+        replierId = #{replierid,jdbcType=VARCHAR},
+      </if>
+      <if test="replycontent != null">
+        replyContent = #{replycontent,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherdate != null">
+        publisherDate = #{publisherdate,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        is_active = #{isActive,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenhao.dao.entity.PrivateWord">
+    update privateword
+    set privateWord = #{privateword,jdbcType=VARCHAR},
+      publisherId = #{publisherid,jdbcType=VARCHAR},
+      replierId = #{replierid,jdbcType=VARCHAR},
+      replyContent = #{replycontent,jdbcType=VARCHAR},
+      publisherDate = #{publisherdate,jdbcType=VARCHAR},
+      is_active = #{isActive,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
