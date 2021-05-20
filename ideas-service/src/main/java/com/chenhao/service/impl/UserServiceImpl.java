@@ -1,11 +1,11 @@
-package com.chenhao.dto.impl;
+package com.chenhao.service.impl;
 
 import com.chenhao.common.utils.MD5Util;
 import com.chenhao.dao.entity.User;
 import com.chenhao.dao.entity.UserExample;
 import com.chenhao.dao.mapper.UserMapper;
 import com.chenhao.dto.request.RegisterRequestDTO;
-import com.chenhao.dto.IUserService;
+import com.chenhao.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

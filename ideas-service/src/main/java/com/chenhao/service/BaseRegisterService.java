@@ -1,4 +1,4 @@
-package com.chenhao.dto;
+package com.chenhao.service;
 
 import com.chenhao.dao.entity.User;
 import com.chenhao.dto.request.RegisterRequestDTO;
