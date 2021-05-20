@@ -48,8 +48,21 @@ public class RegisterRequestDTO {
         }
     }
 
+    public String getAuthCode() {
+        return authCode;
+    }
 
+    public String getPhoneNum() {
+        return phoneNum;
+    }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
 
 

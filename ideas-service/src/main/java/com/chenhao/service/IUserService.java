@@ -30,5 +30,5 @@ public interface IUserService {
      * @param request
      * @return
      */
-    Boolean addUser(RegisterRequestDTO request);
+    Integer addUser(RegisterRequestDTO request);
 }

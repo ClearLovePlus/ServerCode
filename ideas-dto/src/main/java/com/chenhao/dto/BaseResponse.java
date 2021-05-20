@@ -9,7 +9,6 @@ import lombok.Data;
  * @author: chenhao
  * @date: 2021-1-5 16:40
  */
-@Data
 @ApiModel(value = "BaseResponse",description = "基础返回实体类")
 public class BaseResponse<T>{
     @ApiModelProperty(value = "返回结果值")
@@ -31,4 +30,28 @@ public class BaseResponse<T>{
         this.data=result;
     }
 
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
 }

@@ -39,11 +39,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean addUser(RegisterRequestDTO request) {
+    public Integer addUser(RegisterRequestDTO request) {
         User user=new User();
         user.setUsername(request.getUserName());
         user.setPhone(request.getPhoneNum());
         user.setPassword(MD5Util.encode(request.getPassword()));
-        return userMapper.insertSelective(user)>0;
+        return userMapper.insertSelective(user);
     }
 }

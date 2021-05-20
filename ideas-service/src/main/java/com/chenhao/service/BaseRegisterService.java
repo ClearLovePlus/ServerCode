@@ -2,6 +2,7 @@ package com.chenhao.service;
 
 import com.chenhao.dao.entity.User;
 import com.chenhao.dto.request.RegisterRequestDTO;
+import com.chenhao.dto.response.RegisterResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,12 +49,17 @@ public abstract class BaseRegisterService<R, T> {
      * @param user
      * @return
      */
-    protected Boolean regitster(User user, String authCode, String phoneNum) {
+    protected RegisterResponseDTO regitster(User user, String authCode, String phoneNum) {
         //学习下build模式下 要用的东西，其实业务设计的过程中完全没有必要
         RegisterRequestDTO request = new RegisterRequestDTO.RegisterRequestDTOBuilder(user.getUsername(), user.getPassword())
                 .authCode(authCode)
                 .phoneNum(phoneNum)
                 .build();
-        return userService.addUser(request);
+        Integer integer = userService.addUser(request);
+        RegisterResponseDTO response=new RegisterResponseDTO();
+             response.setUserId(integer);
+             response.setUserName(user.getUsername());
+             response.setToken("todoToken");
+             return response;
     }
 }
