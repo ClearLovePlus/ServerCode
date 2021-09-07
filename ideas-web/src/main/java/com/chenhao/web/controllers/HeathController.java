@@ -25,9 +25,9 @@ public class HeathController {
     @RequestMapping(value = "health",method = RequestMethod.GET)
     @ApiOperation(value = "健康检查页")
     public String health(){
-        redisClient.getRedisTemplate().opsForValue().set("test","chenhao");
-        String test=(String)redisClient.getRedisTemplate().opsForValue().get("test");
-        redisClient.getRedisTemplate().opsForValue().getOperations().delete("test");
+        redisClient.getRedisTemplate().opsForValue().set("test1","chenhao");
+        String test=(String)redisClient.getRedisTemplate().opsForValue().get("test1");
+        redisClient.getRedisTemplate().opsForValue().getOperations().delete("test1");
         return test;
     }
     @RequestMapping(value = "filedCheck",method = RequestMethod.POST)
