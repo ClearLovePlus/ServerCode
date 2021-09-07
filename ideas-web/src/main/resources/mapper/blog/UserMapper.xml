@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, phone, username, `password`, gender, trueName, birthday, email, personalBrief, 
+    id, phone, username, `password`, gender, trueName, birthday, email, personalBrief,
     recentlyLanded, is_active
   </sql>
   <sql id="Blob_Column_List">
@@ -115,7 +115,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
@@ -132,20 +132,20 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.chenhao.dao.entity.User">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.chenhao.dao.entity.User">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into user (phone, username, `password`, 
-      gender, trueName, birthday, 
-      email, personalBrief, recentlyLanded, 
+    insert into user (phone, username, `password`,
+      gender, trueName, birthday,
+      email, personalBrief, recentlyLanded,
       is_active, avatarImgUrl)
-    values (#{phone,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=CHAR}, #{truename,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{personalbrief,jdbcType=VARCHAR}, #{recentlylanded,jdbcType=VARCHAR}, 
+    values (#{phone,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{gender,jdbcType=CHAR}, #{truename,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{personalbrief,jdbcType=VARCHAR}, #{recentlylanded,jdbcType=VARCHAR},
       #{isActive,jdbcType=INTEGER}, #{avatarimgurl,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.chenhao.dao.entity.User">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.chenhao.dao.entity.User">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>

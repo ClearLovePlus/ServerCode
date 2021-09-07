@@ -46,5 +46,28 @@ public class BusinessConstant {
      * 分割符号为逗号
      */
     public final static String DELIMITER=",";
-
+    /**
+     * 默认的手机号，无意义
+     */
+    public final static String DEFAULT_PHONE="11000000000";
+    /**
+     * 对象的容量为空
+     */
+    public final static Integer EMPTY=0;
+    /**
+     * mp4格式的视频文件
+     */
+    public final static String MP4="mp4";
+    /**
+     * 文件后缀标志
+     */
+    public final static String POINT=".";
+    /**
+     * 视频文件地址
+     */
+    public final static String VIDEOS="videos";
+    /**
+     * 文档文件夹
+     */
+    public final static String DOCUMENT="document";
 }

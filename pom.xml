@@ -32,9 +32,11 @@
         <lombok-version>1.16.22</lombok-version>
         <junit.version>4.12</junit.version>
         <mysql-connector-version>8.0.11</mysql-connector-version>
-
+        <apollo-version>1.2.0</apollo-version>
+        <commons-version>2.6.1</commons-version>
+        <mail-version>1.6.0</mail-version>
     </properties>
-
+    <!-- 用于微服务的springCloud jar包的引入-->
 <!--    <dependencies>-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.cloud</groupId>-->
@@ -49,6 +51,23 @@
 <!--    </dependencies>-->
     <dependencyManagement>
         <dependencies>
+<!--   apollo客户端         -->
+            <dependency>
+                <groupId>com.ctrip.framework.apollo</groupId>
+                <artifactId>apollo-client</artifactId>
+                <version>${apollo-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${mail-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-version}</version>
+            </dependency>
+<!--      apollo客户端      -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

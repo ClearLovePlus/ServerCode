@@ -2,8 +2,10 @@ package com.chenhao.service;
 
 
 import com.chenhao.dao.entity.User;
+import com.chenhao.dto.request.ChangePwdRequestDTO;
 import com.chenhao.dto.request.RegisterRequestDTO;
 
+import java.util.Date;
 
 /**
  * @description:
@@ -31,4 +33,28 @@ public interface IUserService {
      * @return
      */
     Integer addUser(RegisterRequestDTO request);
+
+    /**
+     * 通过手机号查询用户信息
+     * @param phoneNum
+     * @return
+     */
+    User getUserByPhoneNum(String phoneNum);
+
+    /**
+     * 修改密码
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    Boolean changeUserPwd(ChangePwdRequestDTO request) throws Exception;
+
+    /**
+     * 判断是否是节假日
+     * @param isBroker
+     * @param date
+     * @return
+     * @throws Exception
+     */
+    Boolean isHoliday(Boolean isBroker, String date) throws Exception;
 }

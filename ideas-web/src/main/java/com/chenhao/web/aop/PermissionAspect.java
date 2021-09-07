@@ -4,6 +4,7 @@ import com.chenhao.common.constants.BusinessConstant;
 import com.chenhao.common.enums.BusinessEnum;
 import com.chenhao.common.exception.BusinessException;
 import com.chenhao.common.exception.SystemException;
+import com.chenhao.service.IRedisClientService;
 import com.chenhao.web.annotions.Permission;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -33,7 +34,7 @@ public class PermissionAspect {
 
     private static final Logger logger= LoggerFactory.getLogger(PermissionAspect.class);
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private IRedisClientService redisClient;
     /**
      * 打上permission注解的接口需要做登录态或者权限认证
      */
@@ -63,7 +64,7 @@ public class PermissionAspect {
         if(StringUtils.isEmpty(token)) {
             throw new BusinessException(BusinessEnum.MISSING_HEADER.getCode(), BusinessEnum.MISSING_HEADER.getMsg());
         }
-        String userId=stringRedisTemplate.opsForValue().get(BusinessConstant.TOKEN_FOR_USERID+token);
+        String userId=(String)redisClient.getRedisTemplate().opsForValue().get(BusinessConstant.TOKEN_FOR_USERID+token);
         if(StringUtils.isEmpty(userId)){
             throw new BusinessException(BusinessEnum.NO_PERMISSION.getCode(), BusinessEnum.NO_PERMISSION.getMsg());
         }

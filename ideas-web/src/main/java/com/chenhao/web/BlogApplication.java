@@ -2,11 +2,14 @@ package com.chenhao.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication(scanBasePackages = {"com.chenhao"},exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication(scanBasePackages = {"com.chenhao"},exclude = {DataSourceAutoConfiguration.class,	RedisAutoConfiguration.class,
+        RedisRepositoriesAutoConfiguration.class})
 @EnableSwagger2
 @ComponentScan("com.chenhao")
 public class BlogApplication {

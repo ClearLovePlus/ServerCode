@@ -1,6 +1,9 @@
 package com.chenhao.dto.request;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @description:注册请求实体，内部用build模式进行参数实现
@@ -8,10 +11,15 @@ import lombok.Data;
  * @date: 2021-5-18 15:04
  */
 @Data
+@ApiModel(value = "RegisterRequestDTO",description = "注册请求实体")
 public class RegisterRequestDTO {
+    @ApiModelProperty(value = "验证码",example = "111111")
     private String authCode;
+    @ApiModelProperty(value = "手机号",example = "手机号")
     private String phoneNum;
+    @ApiModelProperty(value = "用户名",example = "ttttt")
     private String userName;
+    @ApiModelProperty(value = "密码",example = "eiejeijre")
     private String password;
 
     private RegisterRequestDTO(RegisterRequestDTOBuilder builder){
@@ -48,21 +56,8 @@ public class RegisterRequestDTO {
         }
     }
 
-    public String getAuthCode() {
-        return authCode;
-    }
 
-    public String getPhoneNum() {
-        return phoneNum;
-    }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }
 
 

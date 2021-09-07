@@ -4,12 +4,14 @@ import com.chenhao.common.utils.MD5Util;
 import com.chenhao.dao.entity.User;
 import com.chenhao.dao.entity.UserExample;
 import com.chenhao.dao.mapper.UserMapper;
+import com.chenhao.dto.request.ChangePwdRequestDTO;
 import com.chenhao.dto.request.RegisterRequestDTO;
 import com.chenhao.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ import java.util.List;
  */
 @Service("userService")
 public class UserServiceImpl implements IUserService {
-    @Autowired
+    @Resource
     private UserMapper userMapper;
     @Override
     public User getUserByUserName(String userName) {
@@ -45,5 +47,20 @@ public class UserServiceImpl implements IUserService {
         user.setPhone(request.getPhoneNum());
         user.setPassword(MD5Util.encode(request.getPassword()));
         return userMapper.insertSelective(user);
+    }
+
+    @Override
+    public User getUserByPhoneNum(String phoneNum) {
+        return null;
+    }
+
+    @Override
+    public Boolean changeUserPwd(ChangePwdRequestDTO request) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Boolean isHoliday(Boolean isBroker, String date) throws Exception {
+        return null;
     }
 }

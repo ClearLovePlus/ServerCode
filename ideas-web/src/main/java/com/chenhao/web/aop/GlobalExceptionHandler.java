@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public BaseResponse anotherException(Exception e){
         logger.error(String.format("发生未知异常：%s",e.getMessage()),e);
-        BaseResponse result=new BaseResponse(-500,"unknow error");
+        BaseResponse result=new BaseResponse(-500,e.getMessage());
         return result;
     }
 }

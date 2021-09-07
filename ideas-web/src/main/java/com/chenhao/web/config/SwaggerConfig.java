@@ -2,6 +2,7 @@ package com.chenhao.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@Profile({"dev","test","uat"})
 public class SwaggerConfig implements WebMvcConfigurer {
 
     @Bean
@@ -25,7 +27,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.tebonx.mbupservice.web.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.chenhao.web.controllers"))
                 .paths(PathSelectors.any())
                 .build()
                 // 主要关注点----每个接口调用都填写token
@@ -35,10 +37,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("中后台API")
-                .termsOfServiceUrl("http://despairyoke.github.io/")
+                .title("blog接口api")
+                .termsOfServiceUrl("https://github.com/ClearLovePlus/ServerCode")
                 .version("1.0")
-                .description("中后台API")
+                .description("blog接口api")
                 .build();
     }
 

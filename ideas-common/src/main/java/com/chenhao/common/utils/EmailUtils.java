@@ -1,0 +1,70 @@
+package com.chenhao.common.utils;
+
+
+import java.security.Security;
+import java.util.Properties;
+import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
+
+/**
+ * @description:
+ * @author: chenhao
+ * @date: 2021-8-25 14:28
+ */
+public class EmailUtils {
+
+    public static void sendEmail() {
+        Properties props = new Properties();
+        //指定邮件的发送服务器地址
+        props.put("mail.smtp.host", "smtp.qq.com");
+        //指定邮件的发送服务器地址
+        props.put("mail.smtp.port", "587");
+        //服务器是否要验证用户的身份信息
+        props.put("mail.smtp.auth", "true");
+         //得到Session
+        Session session = Session.getInstance(props);
+        //代表启用debug模式，可以在控制台输出smtp协议应答的过程
+        session.setDebug(true);
+
+        //创建一个MimeMessage格式的邮件
+        MimeMessage message = new MimeMessage(session);
+
+        //设置发送者
+        Address fromAddress = null;
+        try {
+            //邮件地址;
+            fromAddress = new InternetAddress("1183829953@qq.com");
+            message.setFrom(fromAddress);//设置发送的邮件地址
+            //设置接收者
+            message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress("OneTheWayHao@gmail.com"));
+            //设置邮件的主题
+            message.setSubject("test");
+            //设置邮件的内容
+            message.setText("test");
+            //保存邮件
+            message.saveChanges();
+            //得到发送邮件的服务器(这里用的是smtp服务器)
+            Transport transport = session.getTransport("smtp");
+
+            //发送者的账号连接到smtp服务器上  @163.com可以不写
+            transport.connect("smtp.qq.com", "1183829953@qq.com", "fdlhawvcbqirbahd");
+            //发送信息
+            transport.sendMessage(message, message.getAllRecipients());
+            //关闭服务器通道
+            transport.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public static void main(String[] args) {
+//        try {
+//            EmailUtils.sendEmail();
+//        } catch (Exception e) {
+//
+//        }
+//
+//    }
+}
