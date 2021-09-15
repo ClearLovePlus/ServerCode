@@ -3,11 +3,8 @@ package com.chenhao.dao.mapper;
 import com.chenhao.dao.entity.Article;
 import com.chenhao.dao.entity.ArticleExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface ArticleMapper {
     long countByExample(ArticleExample example);
 

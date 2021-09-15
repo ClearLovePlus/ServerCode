@@ -90,7 +90,19 @@ public enum BusinessEnum {
     /**
      * 该appId 无权限访问此接口
      */
-    APP_ID_WITH_NO_PERMISSION(506,"the appId has no permission to this api");
+    APP_ID_WITH_NO_PERMISSION(506,"the appId has no permission to this api"),
+    /**
+     * 用户未登录
+     */
+    USER_NOT_LOGIN_IN(2013,"用户未登录或登录态已经失效，请重新登录"),
+    /**
+     * 没有新增和修改文章的权限
+     */
+    NO_PERMISSION_TO_WRITE(2014,"无新增或者修改文章的权限"),
+    /**
+     * 文章不存在或者已经被删除
+     */
+    NO_ARTICLE_EXIST(2015,"该文章不存在或者已经被删除");
     private Integer code;
     private String  msg;
     BusinessEnum(Integer code,String msg){

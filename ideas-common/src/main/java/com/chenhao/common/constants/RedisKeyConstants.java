@@ -15,4 +15,8 @@ public class RedisKeyConstants {
      * 登录时候的验证码
      */
     public static final String LOGIN_PREFIX="login:code:%s";
+    /**
+     * 存储在redis中的token，如果过期需要重新登录
+     */
+    public  static final String TOKEN_PREFIX="blog:token:%s";
 }

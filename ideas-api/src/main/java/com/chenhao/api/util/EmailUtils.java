@@ -1,15 +1,15 @@
-package com.chenhao.common.utils;
+package com.chenhao.api.util;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.Security;
+import javax.mail.Address;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.Properties;
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
 
 /**
  * @description:

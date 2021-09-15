@@ -33,7 +33,16 @@
         </encoder>
     </appender>
 
-
+    <!--自定义监控日志appender,用来监控告警一般维度的应用报错-->
+<!--    <appender name="test" class="com.chenhao.api.appender.MonitorAppender">-->
+<!--        &lt;!&ndash;此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息&ndash;&gt;-->
+<!--        <appName>blog</appName>-->
+<!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--            <level>warn</level>-->
+<!--            <onMatch>ACCEPT</onMatch>-->
+<!--            <onMismatch>DENY</onMismatch>-->
+<!--        </filter>-->
+<!--    </appender>-->
     <!--输出到文件-->
 
     <!-- 时间滚动输出 level为 DEBUG 日志 -->
@@ -147,6 +156,7 @@
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="INFO_FILE" />
         <appender-ref ref="ERROR_FILE" />
+<!--        <appender-ref ref="test"/>-->
     </root>
 
 </configuration>

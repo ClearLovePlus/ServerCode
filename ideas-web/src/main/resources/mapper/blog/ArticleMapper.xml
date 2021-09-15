@@ -17,6 +17,7 @@
     <result column="lastArticleId" jdbcType="BIGINT" property="lastarticleid" />
     <result column="nextArticleId" jdbcType="BIGINT" property="nextarticleid" />
     <result column="is_active" jdbcType="INTEGER" property="isActive" />
+    <result column="authorId" jdbcType="INTEGER" property="authorid" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.chenhao.dao.entity.Article">
     <result column="articleContent" jdbcType="LONGVARCHAR" property="articlecontent" />
@@ -82,7 +83,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, articleId, author, originalAuthor, articleTitle, articleTags, articleType, articleCategories, 
-    publishDate, updateDate, articleUrl, likes, lastArticleId, nextArticleId, is_active
+    publishDate, updateDate, articleUrl, likes, lastArticleId, nextArticleId, is_active, 
+    authorId
   </sql>
   <sql id="Blob_Column_List">
     articleContent, articleTabloid
@@ -145,14 +147,14 @@
       articleTitle, articleTags, articleType, 
       articleCategories, publishDate, updateDate, 
       articleUrl, likes, lastArticleId, 
-      nextArticleId, is_active, articleContent, 
-      articleTabloid)
+      nextArticleId, is_active, authorId, 
+      articleContent, articleTabloid)
     values (#{articleid,jdbcType=BIGINT}, #{author,jdbcType=VARCHAR}, #{originalauthor,jdbcType=VARCHAR}, 
       #{articletitle,jdbcType=VARCHAR}, #{articletags,jdbcType=VARCHAR}, #{articletype,jdbcType=VARCHAR}, 
       #{articlecategories,jdbcType=VARCHAR}, #{publishdate,jdbcType=VARCHAR}, #{updatedate,jdbcType=VARCHAR}, 
       #{articleurl,jdbcType=VARCHAR}, #{likes,jdbcType=INTEGER}, #{lastarticleid,jdbcType=BIGINT}, 
-      #{nextarticleid,jdbcType=BIGINT}, #{isActive,jdbcType=INTEGER}, #{articlecontent,jdbcType=LONGVARCHAR}, 
-      #{articletabloid,jdbcType=LONGVARCHAR})
+      #{nextarticleid,jdbcType=BIGINT}, #{isActive,jdbcType=INTEGER}, #{authorid,jdbcType=INTEGER}, 
+      #{articlecontent,jdbcType=LONGVARCHAR}, #{articletabloid,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.chenhao.dao.entity.Article">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -201,6 +203,9 @@
       </if>
       <if test="isActive != null">
         is_active,
+      </if>
+      <if test="authorid != null">
+        authorId,
       </if>
       <if test="articlecontent != null">
         articleContent,
@@ -251,6 +256,9 @@
       </if>
       <if test="isActive != null">
         #{isActive,jdbcType=INTEGER},
+      </if>
+      <if test="authorid != null">
+        #{authorid,jdbcType=INTEGER},
       </if>
       <if test="articlecontent != null">
         #{articlecontent,jdbcType=LONGVARCHAR},
@@ -314,6 +322,9 @@
       <if test="record.isActive != null">
         is_active = #{record.isActive,jdbcType=INTEGER},
       </if>
+      <if test="record.authorid != null">
+        authorId = #{record.authorid,jdbcType=INTEGER},
+      </if>
       <if test="record.articlecontent != null">
         articleContent = #{record.articlecontent,jdbcType=LONGVARCHAR},
       </if>
@@ -342,6 +353,7 @@
       lastArticleId = #{record.lastarticleid,jdbcType=BIGINT},
       nextArticleId = #{record.nextarticleid,jdbcType=BIGINT},
       is_active = #{record.isActive,jdbcType=INTEGER},
+      authorId = #{record.authorid,jdbcType=INTEGER},
       articleContent = #{record.articlecontent,jdbcType=LONGVARCHAR},
       articleTabloid = #{record.articletabloid,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -364,7 +376,8 @@
       likes = #{record.likes,jdbcType=INTEGER},
       lastArticleId = #{record.lastarticleid,jdbcType=BIGINT},
       nextArticleId = #{record.nextarticleid,jdbcType=BIGINT},
-      is_active = #{record.isActive,jdbcType=INTEGER}
+      is_active = #{record.isActive,jdbcType=INTEGER},
+      authorId = #{record.authorid,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -414,6 +427,9 @@
       <if test="isActive != null">
         is_active = #{isActive,jdbcType=INTEGER},
       </if>
+      <if test="authorid != null">
+        authorId = #{authorid,jdbcType=INTEGER},
+      </if>
       <if test="articlecontent != null">
         articleContent = #{articlecontent,jdbcType=LONGVARCHAR},
       </if>
@@ -439,6 +455,7 @@
       lastArticleId = #{lastarticleid,jdbcType=BIGINT},
       nextArticleId = #{nextarticleid,jdbcType=BIGINT},
       is_active = #{isActive,jdbcType=INTEGER},
+      authorId = #{authorid,jdbcType=INTEGER},
       articleContent = #{articlecontent,jdbcType=LONGVARCHAR},
       articleTabloid = #{articletabloid,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
@@ -458,7 +475,8 @@
       likes = #{likes,jdbcType=INTEGER},
       lastArticleId = #{lastarticleid,jdbcType=BIGINT},
       nextArticleId = #{nextarticleid,jdbcType=BIGINT},
-      is_active = #{isActive,jdbcType=INTEGER}
+      is_active = #{isActive,jdbcType=INTEGER},
+      authorId = #{authorid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

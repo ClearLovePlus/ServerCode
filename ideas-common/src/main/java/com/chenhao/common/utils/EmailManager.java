@@ -73,14 +73,14 @@ public class EmailManager {
                 for (File file : attachments) {
                     StringBuilder sb = new StringBuilder();
                     String fileName = file.getName();
-
+                    
                     if(fileName.indexOf("-")>=0&&fileName.lastIndexOf("-")!=fileName.indexOf("-")) {
                     	sb.append(fileName.substring(0, fileName.indexOf("-", fileName.indexOf("-") + 1)));
                     	sb.append(fileName.substring(fileName.indexOf(".")));
                     }else {
                     	sb.append(fileName);
                     }
-
+                    
                     helper.addAttachment(MimeUtility.encodeText(sb + ""), file);
                 }
             }
@@ -95,7 +95,6 @@ public class EmailManager {
 
     public static void main(String[] args) {
         EmailManager.sendMail("smtp.qq.com","587","1183829953@qq.com","fdlhawvcbqirbahd",
-                "1183829953@qq.com","chenhao",new String[]{"625872582@qq.com"},new String[]{"chenhao3@tebon.com.cn"},"","老陈给女朋友的测试",false,new File[]{new File("/Users/chenhao/project/serverCode/ServerCode/document/hu.txt") });
-        System.out.println("success");
+                "1183829953@qq.com","chenhao",new String[]{"OneTheWayHao@gmail.com"},new String[]{"chenhao3@tebon.com.cn"},"测试","test测试",false,new File[]{new File("D:\\ideas\\ServerCode\\document\\sql.txt") });
     }
 }

@@ -1093,6 +1093,66 @@ public class ArticleExample {
             addCriterion("is_active not between", value1, value2, "isActive");
             return (Criteria) this;
         }
+
+        public Criteria andAuthoridIsNull() {
+            addCriterion("authorId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridIsNotNull() {
+            addCriterion("authorId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridEqualTo(Integer value) {
+            addCriterion("authorId =", value, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridNotEqualTo(Integer value) {
+            addCriterion("authorId <>", value, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridGreaterThan(Integer value) {
+            addCriterion("authorId >", value, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridGreaterThanOrEqualTo(Integer value) {
+            addCriterion("authorId >=", value, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridLessThan(Integer value) {
+            addCriterion("authorId <", value, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridLessThanOrEqualTo(Integer value) {
+            addCriterion("authorId <=", value, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridIn(List<Integer> values) {
+            addCriterion("authorId in", values, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridNotIn(List<Integer> values) {
+            addCriterion("authorId not in", values, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridBetween(Integer value1, Integer value2) {
+            addCriterion("authorId between", value1, value2, "authorid");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthoridNotBetween(Integer value1, Integer value2) {
+            addCriterion("authorId not between", value1, value2, "authorid");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

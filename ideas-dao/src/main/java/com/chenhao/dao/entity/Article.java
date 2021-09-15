@@ -33,6 +33,8 @@ public class Article implements Serializable {
 
     private Integer isActive;
 
+    private Integer authorid;
+
     private String articlecontent;
 
     private String articletabloid;
@@ -159,6 +161,14 @@ public class Article implements Serializable {
         this.isActive = isActive;
     }
 
+    public Integer getAuthorid() {
+        return authorid;
+    }
+
+    public void setAuthorid(Integer authorid) {
+        this.authorid = authorid;
+    }
+
     public String getArticlecontent() {
         return articlecontent;
     }
@@ -196,6 +206,7 @@ public class Article implements Serializable {
         sb.append(", lastarticleid=").append(lastarticleid);
         sb.append(", nextarticleid=").append(nextarticleid);
         sb.append(", isActive=").append(isActive);
+        sb.append(", authorid=").append(authorid);
         sb.append(", articlecontent=").append(articlecontent);
         sb.append(", articletabloid=").append(articletabloid);
         sb.append(", serialVersionUID=").append(serialVersionUID);

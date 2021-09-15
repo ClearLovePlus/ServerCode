@@ -1,6 +1,9 @@
 package com.tebonx.mbupservice.web;
 
 import com.alibaba.fastjson.JSON;
+import com.chenhao.common.utils.EsClient;
+import com.chenhao.common.utils.FunctionUtils;
+import com.chenhao.service.IEsService;
 import com.chenhao.service.IRedisClientService;
 import com.chenhao.service.IUserService;
 import com.chenhao.web.BlogApplication;
@@ -44,6 +47,8 @@ public class BaseJunit {
     @Autowired
     private IRedisClientService redisClient;
 
+    @Autowired
+    private IEsService esService;
     protected MockMvc mockMvc;
 
 
@@ -53,7 +58,7 @@ public class BaseJunit {
     }
 
     @Test
-    public void testUserInfo() throws Exception{
+    public void testUserInfo() throws Exception {
 //        Assert.assertTrue(userService.isHoliday(true,"2021-07-07"));
 //        Assert.assertFalse(userService.isHoliday(true,"2021-02-07"));
 //        Assert.assertTrue(userService.isHoliday(false,"2021-07-07"));
@@ -61,30 +66,38 @@ public class BaseJunit {
 //        Assert.assertFalse(userService.isHoliday(true,"2021-10-01"));
 //        Assert.assertFalse(userService.isHoliday(false,"2021-10-01"));
         RedisTemplate<String, Object> redisTemplate = redisClient.getRedisTemplate();
-        redisTemplate.opsForValue().set("test","test");
+        redisTemplate.opsForValue().set("test", "test");
         System.out.println(redisTemplate.opsForValue().get("redisKey"));
     }
 
     @Test
-    public void RedisLockTest() throws Exception{
-        String content=UUID.randomUUID().toString();
+    public void RedisLockTest() throws Exception {
+        String content = UUID.randomUUID().toString();
 //        for (int i=0;i<2;i++){
 //            new Thread(new Runnable() {
 //                @Override
 //                public void run() {
-                    try {
-                        if(redisClient.tryLock("redisKey", content,5L, TimeUnit.SECONDS)){
-                            System.out.println(Thread.currentThread().getId()+"--"+Thread.currentThread().getName()+"获得redis锁");
-                        }
-                    }catch (Exception e){
-                        System.out.println("error");
-                    }finally {
-                        redisClient.releaseLock("redisKey",content);
-                        System.out.println(Thread.currentThread().getId()+"--"+Thread.currentThread().getName()+"释放redis锁");
-                    }
-//                }}).start();
+        try {
+            if (redisClient.tryLock("redisKey", content, 5L, TimeUnit.SECONDS)) {
+                System.out.println(Thread.currentThread().getId() + "--" + Thread.currentThread().getName() + "获得redis锁");
+            }
+        } catch (Exception e) {
+            System.out.println("error");
+        } finally {
+            redisClient.releaseLock("redisKey", content);
+            System.out.println(Thread.currentThread().getId() + "--" + Thread.currentThread().getName() + "释放redis锁");
         }
-//    }
+//                }}).start();
+    }
 
+    //    }
+    @Test
+    public void testEs() throws Exception {
+//        esService.deleteIndex("blog","93Q0oHsBhubEUyMaQ_UK");
+        //      esService.insert();
+        //esService.getTest(FunctionUtils::getIndex);
+        esService.fieldCapabilitiesSearch( new String[]{"blog","indexing"});
+//        esService.bulkTest(FunctionUtils::getTwoDocId,"blog");
+    }
 }
 

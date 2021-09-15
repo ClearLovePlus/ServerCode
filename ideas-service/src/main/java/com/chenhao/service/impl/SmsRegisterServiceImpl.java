@@ -50,7 +50,7 @@ public class SmsRegisterServiceImpl extends BaseRegisterService<String, Register
         newUser.setPassword(MD5Util.encode(creatDefaultPassword()));
         newUser.setUsername(request.getPhoneNum());
         newUser.setPhone(request.getPhoneNum());
-        RegisterResponseDTO register = regitster(newUser, request.getAuthCode(), request.getPhoneNum());
+        RegisterResponseDTO register = regitster(newUser, request.getAuthCode(), request.getPhoneNum(),request.getSex());
         register.setToken(tokenService.createToken(register.getUserId(),register.getUserName(),request.getPhoneNum()));
         //注册完成的一些后置操作,其实可以是异步的
         afterRegister(request);

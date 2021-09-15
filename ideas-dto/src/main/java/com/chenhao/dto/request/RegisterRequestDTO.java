@@ -21,12 +21,15 @@ public class RegisterRequestDTO {
     private String userName;
     @ApiModelProperty(value = "密码",example = "eiejeijre")
     private String password;
+    @ApiModelProperty(value = "性别",example = "1:男 2：女")
+    private Integer sex;
 
     private RegisterRequestDTO(RegisterRequestDTOBuilder builder){
         this.password=builder.password;
         this.authCode=builder.authCode;
         this.userName=builder.userName;
         this.phoneNum=builder.phoneNum;
+        this.sex=builder.sex;
     }
 
     /**
@@ -37,6 +40,7 @@ public class RegisterRequestDTO {
         private String phoneNum;
         private String userName;
         private String password;
+        private Integer sex;
 
         public  RegisterRequestDTOBuilder(String userName,String password){
             this.userName=userName;
@@ -51,6 +55,10 @@ public class RegisterRequestDTO {
             this.authCode=authCode;
             return this;
         }
+        public RegisterRequestDTOBuilder sex(Integer sex){
+            this.sex=sex;
+            return this;
+        }
         public  RegisterRequestDTO build(){
             return new RegisterRequestDTO(this);
         }
@@ -59,5 +67,3 @@ public class RegisterRequestDTO {
 
 
 }
-
-

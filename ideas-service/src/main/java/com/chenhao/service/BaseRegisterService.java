@@ -3,6 +3,7 @@ package com.chenhao.service;
 import com.chenhao.dao.entity.User;
 import com.chenhao.dto.request.RegisterRequestDTO;
 import com.chenhao.dto.response.RegisterResponseDTO;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,22 +45,23 @@ public abstract class BaseRegisterService<R, T> {
      */
     protected abstract Boolean checkPassword(String password);
 
+
     /**
      * 通用的注册主流程
      * @param user
      * @return
      */
-    protected RegisterResponseDTO regitster(User user, String authCode, String phoneNum) {
+    protected RegisterResponseDTO regitster(User user, String authCode, String phoneNum, Integer sex) {
         //学习下build模式下 要用的东西，其实业务设计的过程中完全没有必要
         RegisterRequestDTO request = new RegisterRequestDTO.RegisterRequestDTOBuilder(user.getUsername(), user.getPassword())
                 .authCode(authCode)
                 .phoneNum(phoneNum)
+                .sex(sex)
                 .build();
-        Integer integer = userService.addUser(request);
+        Integer userId = userService.addUser(request);
         RegisterResponseDTO response=new RegisterResponseDTO();
-             response.setUserId(integer);
-             response.setUserName(user.getUsername());
-             response.setToken("todoToken");
-             return response;
+        response.setUserName(user.getUsername());
+        response.setUserId(userId);
+        return response;
     }
 }
