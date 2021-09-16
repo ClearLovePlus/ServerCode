@@ -12,5 +12,6 @@ public class LoginResponseDTO {
     private String userName;
     private Integer userId;
     private String token;
+    private String avatar;
 
 }

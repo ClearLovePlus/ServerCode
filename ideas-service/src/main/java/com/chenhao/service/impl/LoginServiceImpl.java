@@ -20,7 +20,8 @@ import org.springframework.util.StringUtils;
  * @date: 2021-6-2 15:21
  */
 @Service("loginWithPwdService")
-public class LoginServiceImpl extends BaseLoginService<String, LoginResponseDTO> implements ILoginWithPwdService {
+public class LoginServiceImpl
+        extends BaseLoginService<String, LoginResponseDTO> implements ILoginWithPwdService {
     @Autowired
     @Qualifier("localTokenService")
     private ITokenService tokenService;
@@ -46,6 +47,12 @@ public class LoginServiceImpl extends BaseLoginService<String, LoginResponseDTO>
         response.setUserName(user.getUsername());
         response.setToken(tokenService.createToken(user.getId(),user.getUsername(),user.getPhone()));
         response.setUserId(user.getId());
+        response.setAvatar(user.getAvatarimgurl());
         return response;
+    }
+
+    @Override
+    public Boolean logout(Integer userId) {
+        return super.logOut(userId);
     }
 }

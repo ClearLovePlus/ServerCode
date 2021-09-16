@@ -17,4 +17,11 @@ public interface ILoginWithPwdService {
      * @throws Exception
      */
     LoginResponseDTO loginWithPwd(LoginRequestDTO request) throws Exception;
+
+    /**
+     * 登出服务
+     * @param userId
+     * @return
+     */
+    Boolean logout(Integer userId);
 }
