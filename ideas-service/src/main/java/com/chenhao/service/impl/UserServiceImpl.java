@@ -61,7 +61,7 @@ public class UserServiceImpl implements IUserService {
     public User getUserByPhoneNum(String phoneNum) {
         UserExample example=new UserExample();
         example.createCriteria().andPhoneEqualTo(phoneNum).andIsActiveEqualTo(1);
-        List<User> users = userMapper.selectByExample(example);
+        List<User> users = userMapper.selectByExampleWithBLOBs(example);
         if(CollectionUtils.isEmpty(users)){
             return null;
         }
