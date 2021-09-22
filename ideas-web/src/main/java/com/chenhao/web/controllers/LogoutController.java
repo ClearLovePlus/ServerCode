@@ -2,6 +2,7 @@ package com.chenhao.web.controllers;
 
 import com.chenhao.dto.BaseResponse;
 import com.chenhao.service.ILoginWithPwdService;
+import com.chenhao.web.annotions.Log;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class LogoutController {
     @Autowired
     private ILoginWithPwdService loginWithPwdService;
     @ApiOperation("登出服务")
+    @Log
     @RequestMapping(value = "out",method = RequestMethod.GET)
     @ResponseBody
     BaseResponse<Boolean> logout(@RequestParam("userId") Integer userId){

@@ -12,6 +12,7 @@ import com.chenhao.dto.response.ArticleResponse;
 import com.chenhao.dto.response.TokenResponseDTO;
 import com.chenhao.service.IArticleService;
 import com.chenhao.service.IRedisClientService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Service("articleService")
 public class ArticleServiceImpl implements IArticleService {
-    private static final int ZERO=0;
+    private static final int ZERO = 0;
     @Resource
     private ArticleMapper articleMapper;
     @Autowired
@@ -51,10 +51,15 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public List<ArticleResponse> getAllArticle(Integer userId) throws Exception {
+    public List<ArticleResponse> getAllArticle(Integer userId, Integer currentPage) throws Exception {
         ArticleExample articleExample = new ArticleExample();
-        articleExample.createCriteria().andAuthoridEqualTo(userId);
-        List<Article> articles = articleMapper.selectByExampleWithBLOBs(articleExample);
+        if (userId == null) {
+            articleExample.createCriteria().andIdGreaterThan(0);
+        } else {
+            articleExample.createCriteria().andAuthoridEqualTo(userId);
+        }
+        RowBounds rowBounds = new RowBounds((currentPage-1)*5, 5);
+        List<Article> articles = articleMapper.selectByExampleWithRowbounds(articleExample, rowBounds);
         if (CollectionUtils.isEmpty(articles)) {
             return null;
         }
@@ -68,6 +73,7 @@ public class ArticleServiceImpl implements IArticleService {
             response.setCreatDate(p.getPublishdate());
             response.setId(p.getId());
             response.setTitle(p.getArticletitle());
+            response.setDescription(p.getArticletabloid());
             result.add(response);
         });
         return result;
@@ -75,10 +81,10 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public ArticleResponse getArticleByArticleId(Long articleId) throws Exception {
-        ArticleExample articleExample=new ArticleExample();
+        ArticleExample articleExample = new ArticleExample();
         articleExample.createCriteria().andArticleidEqualTo(articleId);
         List<Article> articles = articleMapper.selectByExampleWithBLOBs(articleExample);
-        if(CollectionUtils.isEmpty(articles)){
+        if (CollectionUtils.isEmpty(articles)) {
             return null;
         }
         ArticleResponse response = new ArticleResponse();
@@ -89,6 +95,7 @@ public class ArticleServiceImpl implements IArticleService {
         response.setCreatDate(articles.get(0).getPublishdate());
         response.setId(articles.get(0).getId());
         response.setTitle(articles.get(0).getArticletitle());
+        response.setDescription(articles.get(0).getArticletabloid());
         return response;
     }
 
@@ -99,22 +106,27 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public Boolean editArticle(ArticleRequestDTO request) throws Exception {
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if(request.getId()==null||request.getId()==ZERO){
-            Article newArticle=new Article();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (request.getId() == null || request.getId() == ZERO) {
+            Article newArticle = new Article();
             request.setArticleid(System.currentTimeMillis());
-            BeanUtils.copyProperties(request,newArticle);
-            return articleMapper.insertSelective(newArticle)>0;
+            BeanUtils.copyProperties(request, newArticle);
+            return articleMapper.insertSelective(newArticle) > 0;
         }
-        if(!validatePermission(request.getToken(),request.getArticleid())) {
-           throw new BusinessException(BusinessEnum.NO_PERMISSION_TO_WRITE);
+        if (!validatePermission(request.getToken(), request.getArticleid())) {
+            throw new BusinessException(BusinessEnum.NO_PERMISSION_TO_WRITE);
         }
         Article article = articleMapper.selectByPrimaryKey(request.getId());
-        if(article==null){
+        if (article == null) {
             throw new BusinessException(BusinessEnum.NO_ARTICLE_EXIST);
         }
         article.setArticlecontent(request.getArticlecontent());
         article.setUpdatedate(format.format(new Date()));
-        return articleMapper.updateByPrimaryKeyWithBLOBs(article)>0;
+        return articleMapper.updateByPrimaryKeyWithBLOBs(article) > 0;
+    }
+
+    @Override
+    public Long articles(Integer userId) throws Exception {
+        return articleMapper.countByUserId(userId);
     }
 }

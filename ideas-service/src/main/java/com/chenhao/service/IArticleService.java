@@ -24,7 +24,7 @@ public interface IArticleService {
      * @return
      * @throws Exception
      */
-     List<ArticleResponse> getAllArticle(Integer userId) throws Exception;
+     List<ArticleResponse> getAllArticle(Integer userId,Integer currentPage) throws Exception;
 
     /**
      * 通过文章id获取文章内容
@@ -49,4 +49,12 @@ public interface IArticleService {
      * @throws Exception
      */
      Boolean editArticle(ArticleRequestDTO request) throws Exception;
+
+    /**
+     * 所有文章的数量
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+     Long  articles(Integer userId) throws Exception;
 }

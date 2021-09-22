@@ -5,6 +5,7 @@ import com.chenhao.dto.request.RegisterRequestDTO;
 import com.chenhao.dto.response.RegisterResponseDTO;
 import com.chenhao.service.ISmsRegisterService;
 import com.chenhao.service.IUserNameRegisterService;
+import com.chenhao.web.annotions.Log;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class RegisterController {
 
     @RequestMapping(value = "userName", method = RequestMethod.POST)
     @ResponseBody
+    @Log
     @ApiOperation("用户名注册")
     public BaseResponse<RegisterResponseDTO> registerByPwd(@RequestBody RegisterRequestDTO request) throws Exception {
         BaseResponse<RegisterResponseDTO> result=new BaseResponse<>();

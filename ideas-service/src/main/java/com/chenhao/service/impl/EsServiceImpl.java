@@ -135,28 +135,29 @@ public class EsServiceImpl implements IEsService {
 
     @Override
     public String getTest(IBlogFunction<String, String> function) throws Exception {
-        GetRequest request = new GetRequest(function.execute("test"), "AXRfpHsBhubEUyMaCPZw");
-        request.fetchSourceContext(FetchSourceContext.FETCH_SOURCE);
-        GetResponse response = EsClient.getEsClient().get(request, RequestOptions.DEFAULT);
-        response.getSourceAsString();
-        System.out.println(response.getSourceAsString());
-        String[] includes = new String[]{"title", "authorName", "textContent"};
-        String[] excludes = Strings.EMPTY_ARRAY;
-        request.fetchSourceContext(new FetchSourceContext(true, includes, excludes));
-        GetResponse response1 = EsClient.getEsClient().get(request, RequestOptions.DEFAULT);
-        System.out.println(response1.getSourceAsString());
-        includes = Strings.EMPTY_ARRAY;
-        excludes = new String[]{"title", "authorName", "textContent"};
-        request.fetchSourceContext(new FetchSourceContext(true, includes, excludes));
-        GetResponse response2 = EsClient.getEsClient().get(request, RequestOptions.DEFAULT);
-        System.out.println(response2.getSourceAsString());
-        return response.getSourceAsString();
+//        GetRequest request = new GetRequest(function.execute("test"), "AXRfpHsBhubEUyMaCPZw");
+//        request.fetchSourceContext(FetchSourceContext.FETCH_SOURCE);
+//        GetResponse response = EsClient.getEsClient().get(request, RequestOptions.DEFAULT);
+//        response.getSourceAsString();
+//        System.out.println(response.getSourceAsString());
+//        String[] includes = new String[]{"title", "authorName", "textContent"};
+//        String[] excludes = Strings.EMPTY_ARRAY;
+//        request.fetchSourceContext(new FetchSourceContext(true, includes, excludes));
+//        GetResponse response1 = EsClient.getEsClient().get(request, RequestOptions.DEFAULT);
+//        System.out.println(response1.getSourceAsString());
+//        includes = Strings.EMPTY_ARRAY;
+//        excludes = new String[]{"title", "authorName", "textContent"};
+//        request.fetchSourceContext(new FetchSourceContext(true, includes, excludes));
+//        GetResponse response2 = EsClient.getEsClient().get(request, RequestOptions.DEFAULT);
+//        System.out.println(response2.getSourceAsString());
+//        return response.getSourceAsString();
+        return null;
     }
 
     @Override
     public void updateTest(IBlogFunction<String, String> function, String indexName) throws Exception {
-        UpdateRequest request = new UpdateRequest(indexName, function.execute(indexName)).doc("updateDate", new Date(), "title", "空间站yyds");
-        EsClient.getEsClient().update(request, RequestOptions.DEFAULT);
+//        UpdateRequest request = new UpdateRequest(indexName, function.execute(indexName)).doc("updateDate", new Date(), "title", "空间站yyds");
+//        EsClient.getEsClient().update(request, RequestOptions.DEFAULT);
     }
 
     @Override
@@ -175,10 +176,10 @@ public class EsServiceImpl implements IEsService {
         builder.endObject();
         IndexRequest insert = new IndexRequest(indexName).source(builder);
         //构造update请求
-        UpdateRequest update = new UpdateRequest(indexName, function.execute(indexName)[0]).doc("updateDate", new Date(), "title", "中国空间站yyds，冲冲冲!");
+//        UpdateRequest update = new UpdateRequest(indexName, function.execute(indexName)[0]).doc("updateDate", new Date(), "title", "中国空间站yyds，冲冲冲!");
         //构造delete请求
         DeleteRequest delete = new DeleteRequest(indexName).id(function.execute(indexName)[1]);
-        bulkRequest.add(update);
+//        bulkRequest.add(update);
         bulkRequest.add(insert);
         bulkRequest.add(delete);
         BulkResponse bulk = EsClient.getEsClient().bulk(bulkRequest, RequestOptions.DEFAULT);
@@ -209,10 +210,10 @@ public class EsServiceImpl implements IEsService {
 
     @Override
     public void updateByQueryTest(String indexName) throws Exception {
-        UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest("blog");
-        updateByQueryRequest.setQuery(new TermQueryBuilder("id", 2L));
-        updateByQueryRequest.setScript(new Script("ctx._source['title']='学习title2';"));
-        BulkByScrollResponse bulkByScrollResponse = EsClient.getEsClient().updateByQuery(updateByQueryRequest, RequestOptions.DEFAULT);
+//        UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest("blog");
+//        updateByQueryRequest.setQuery(new TermQueryBuilder("id", 2L));
+//        updateByQueryRequest.setScript(new Script("ctx._source['title']='学习title2';"));
+//        BulkByScrollResponse bulkByScrollResponse = EsClient.getEsClient().updateByQuery(updateByQueryRequest, RequestOptions.DEFAULT);
     }
 
     @Override
