@@ -39,6 +39,7 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public Boolean validatePermission(String token, Long articleId) throws Exception {
+        String o =(String) redisClient.get(String.format(RedisKeyConstants.TOKEN_PREFIX, token));
         TokenResponseDTO tokenForUser = JSON.parseObject((String) redisClient.get(String.format(RedisKeyConstants.TOKEN_PREFIX, token)), TokenResponseDTO.class);
         if (tokenForUser == null) {
             throw new BusinessException(BusinessEnum.NO_PERMISSION_TO_WRITE);
@@ -53,11 +54,12 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public List<ArticleResponse> getAllArticle(Integer userId, Integer currentPage) throws Exception {
         ArticleExample articleExample = new ArticleExample();
-        if (userId == null) {
+        if (userId == null||userId==ZERO) {
             articleExample.createCriteria().andIdGreaterThan(0);
         } else {
             articleExample.createCriteria().andAuthoridEqualTo(userId);
         }
+        articleExample.setOrderByClause("publishDate desc");
         RowBounds rowBounds = new RowBounds((currentPage-1)*5, 5);
         List<Article> articles = articleMapper.selectByExampleWithRowbounds(articleExample, rowBounds);
         if (CollectionUtils.isEmpty(articles)) {
@@ -96,6 +98,7 @@ public class ArticleServiceImpl implements IArticleService {
         response.setId(articles.get(0).getId());
         response.setTitle(articles.get(0).getArticletitle());
         response.setDescription(articles.get(0).getArticletabloid());
+        response.setAuthorId(articles.get(0).getAuthorid().longValue());
         return response;
     }
 
@@ -110,6 +113,9 @@ public class ArticleServiceImpl implements IArticleService {
         if (request.getId() == null || request.getId() == ZERO) {
             Article newArticle = new Article();
             request.setArticleid(System.currentTimeMillis());
+            request.setArticleurl("http://localhost:8080/getArticleByArticleId/"+request.getArticleid());
+            request.setPublishdate(format.format(new Date()));
+            request.setUpdatedate(format.format(new Date()));
             BeanUtils.copyProperties(request, newArticle);
             return articleMapper.insertSelective(newArticle) > 0;
         }
@@ -121,6 +127,8 @@ public class ArticleServiceImpl implements IArticleService {
             throw new BusinessException(BusinessEnum.NO_ARTICLE_EXIST);
         }
         article.setArticlecontent(request.getArticlecontent());
+        article.setArticletitle(request.getArticletitle());
+        article.setArticletabloid(request.getArticletabloid());
         article.setUpdatedate(format.format(new Date()));
         return articleMapper.updateByPrimaryKeyWithBLOBs(article) > 0;
     }

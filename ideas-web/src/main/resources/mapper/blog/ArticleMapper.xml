@@ -498,7 +498,7 @@
   </update>
   <select id="countByUserId" resultType="java.lang.Long">
     select count(id) from article
-   <if test="userId != null">
+   <if test="userId != null and userId != 0">
      where authorId =${userId}
    </if>
   </select>

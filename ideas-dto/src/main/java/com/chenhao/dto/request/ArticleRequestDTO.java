@@ -43,4 +43,5 @@ public class ArticleRequestDTO {
 
     private String articletabloid;
     private String token;
+    private Integer authorId;
 }

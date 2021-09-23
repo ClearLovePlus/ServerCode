@@ -17,7 +17,7 @@ public interface IFileService {
      * @return
      * @throws Exception
      */
-    Boolean upload(MultipartFile[] files,Integer type) throws Exception;
+    String upload(MultipartFile[] files,Integer type) throws Exception;
 
     /**
      * 文件下载

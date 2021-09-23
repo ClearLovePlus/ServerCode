@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Controller
 @RequestMapping(value = "file")
-@Api(value = "文件服务",tags = {"文件服务集合"})
+@Api(value = "文件服务", tags = {"文件服务集合"})
 public class FilesController {
 
     @Autowired
@@ -36,41 +36,39 @@ public class FilesController {
      * @param type
      * @return
      */
-    @RequestMapping(value = "upload", method = RequestMethod.POST,consumes = "multipart/form-data")
+    @RequestMapping(value = "upload", method = RequestMethod.POST, consumes = "multipart/form-data")
     @ApiOperation("文件上传")
     @ResponseBody
     public BaseResponse uploadFile(@RequestParam("files") MultipartFile[] files, @RequestParam("type") Integer type) throws Exception {
-        fileService.upload(files, type);
-        return new BaseResponse();
+        return new BaseResponse(fileService.upload(files, type));
     }
 
-    @RequestMapping(value = "download",method = RequestMethod.GET)
+    @RequestMapping(value = "download", method = RequestMethod.GET)
     @ApiOperation("文件下载")
     @ResponseBody
-    public BaseResponse downloadFile(@RequestParam("fileName")String fileName,HttpServletResponse response) throws Exception{
-        String targetFileName = FileCacheUtil.getInstance().getTargetFileName(fileName);
+    public void downloadFile(@RequestParam("fileName") String fileName, HttpServletResponse response) throws Exception {
         File downloadFile;
         //先从缓存中拿，拿不到再从本地磁盘中加载
-        if(FileCacheUtil.getInstance().getFileCached(targetFileName)!=null){
-            downloadFile=FileCacheUtil.getInstance().getFileCached(targetFileName);
-        }else {
-            downloadFile=fileService.downloadFile(fileName);
+        downloadFile = FileCacheUtil.getInstance().getFileCached(fileName);
+        if(downloadFile==null){
+        downloadFile = fileService.downloadFile(fileName);
         }
-        InputStream is=new BufferedInputStream(new FileInputStream(downloadFile));
+        InputStream is = new BufferedInputStream(new FileInputStream(downloadFile));
         response.reset();
-        response.setHeader("Content-Length", ""+is.available());
+        response.setHeader("Content-Length", "" + is.available());
         response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;fileName="+ new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
-        OutputStream os=new BufferedOutputStream(response.getOutputStream());
-        byte[] b=new byte[4096];
+        response.setHeader("Content-Disposition", "attachment;fileName=" + new
+
+                String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
+        OutputStream os = new BufferedOutputStream(response.getOutputStream());
+        byte[] b = new byte[4096];
         int count;
-        while ((count=is.read(b))!=-1){
-            os.write(b,0,count);
+        while ((count = is.read(b)) != -1) {
+            os.write(b, 0, count);
         }
         is.close();
         os.close();
         os.flush();
-        return new BaseResponse();
     }
 
 }

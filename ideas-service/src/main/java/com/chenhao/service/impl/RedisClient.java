@@ -53,6 +53,7 @@ public class RedisClient implements IRedisClientService {
 
     @Override
     public boolean setNx(String key, Object value, Long expireTimeMills) {
+        redisTemplate.opsForValue().set(key,value,expireTimeMills,TimeUnit.MILLISECONDS);
         return false;
     }
 
