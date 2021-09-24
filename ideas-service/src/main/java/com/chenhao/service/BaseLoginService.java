@@ -1,11 +1,14 @@
 package com.chenhao.service;
 
+import com.alibaba.fastjson.JSON;
 import com.chenhao.common.constants.RedisKeyConstants;
 import com.chenhao.common.enums.BusinessEnum;
 import com.chenhao.common.exception.BusinessException;
 import com.chenhao.dao.entity.User;
 import com.chenhao.dto.request.LoginRequestDTO;
 import com.chenhao.dto.response.LoginResponseDTO;
+import com.chenhao.dto.response.TokenResponseDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,23 @@ public abstract class BaseLoginService<R, T> {
             redisClient.set(String.format(RedisKeyConstants.TOKEN_PREFIX, userId.toString()), null);
         } catch (Exception e) {
             logger.error("登出异常");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 判断登录状态
+     * @param token
+     * @return
+     */
+    protected Boolean loginStatus(String token){
+        Object o = redisClient.get(String.format(RedisKeyConstants.TOKEN_PREFIX, token));
+        if(o==null){
+            return false;
+        }
+        TokenResponseDTO response= JSON.parseObject((String) o,TokenResponseDTO.class);
+        if(StringUtils.isEmpty(response.getToken())||!token.equals(response.getToken())){
             return false;
         }
         return true;

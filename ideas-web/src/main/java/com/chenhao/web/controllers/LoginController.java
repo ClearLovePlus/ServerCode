@@ -30,4 +30,12 @@ public class LoginController {
         LoginResponseDTO responseDTO = loginWithPwdService.loginWithPwd(request);
         return new BaseResponse<>(responseDTO);
     }
+
+    @Log
+    @ResponseBody
+    @ApiOperation("登录态判断")
+    @RequestMapping(value = "loginStatus", method = RequestMethod.GET)
+    BaseResponse<Boolean> loginStatus(@RequestParam(value = "token",required = true) String token) {
+        return new BaseResponse<>(loginWithPwdService.loginStatus(token));
+    }
 }

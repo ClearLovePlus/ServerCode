@@ -24,4 +24,11 @@ public interface ILoginWithPwdService {
      * @return
      */
     Boolean logout(Integer userId);
+
+    /**
+     * 判断token是否过期，过期需要重新登录
+     * @param token
+     * @return
+     */
+    Boolean loginStatus(String token);
 }

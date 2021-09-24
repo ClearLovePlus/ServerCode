@@ -55,4 +55,9 @@ public class LoginServiceImpl
     public Boolean logout(Integer userId) {
         return super.logOut(userId);
     }
+
+    @Override
+    public Boolean loginStatus(String token) {
+        return super.loginStatus(token);
+    }
 }
