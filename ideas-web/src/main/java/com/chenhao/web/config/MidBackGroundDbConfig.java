@@ -12,7 +12,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -27,6 +30,7 @@ public class MidBackGroundDbConfig {
 
     @ConfigurationProperties(prefix = "spring.datasource.blog")
     @Bean("blogBDataSource")
+    @Primary
     public DataSource blogDb(){
        return DataSourceBuilder.create().build();
     }
@@ -45,4 +49,5 @@ public class MidBackGroundDbConfig {
     {
         return new SqlSessionTemplate(factory);
     }
+
 }
