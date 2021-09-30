@@ -1,6 +1,7 @@
 package com.chenhao.service;
 
 import com.chenhao.dto.request.ArticleRequestDTO;
+import com.chenhao.dto.response.ArticleForSearchResponseDTO;
 import com.chenhao.dto.response.ArticleResponse;
 
 import java.util.List;
@@ -57,4 +58,10 @@ public interface IArticleService {
      * @throws Exception
      */
      Long  articles(Integer userId) throws Exception;
+
+    /**
+     * 获取所有文章的简略
+     * @return
+     */
+     List<ArticleForSearchResponseDTO> getAllArticlePrefix();
 }

@@ -8,6 +8,7 @@ import com.chenhao.dao.entity.Article;
 import com.chenhao.dao.entity.ArticleExample;
 import com.chenhao.dao.mapper.ArticleMapper;
 import com.chenhao.dto.request.ArticleRequestDTO;
+import com.chenhao.dto.response.ArticleForSearchResponseDTO;
 import com.chenhao.dto.response.ArticleResponse;
 import com.chenhao.dto.response.TokenResponseDTO;
 import com.chenhao.service.IArticleService;
@@ -136,5 +137,20 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public Long articles(Integer userId) throws Exception {
         return articleMapper.countByUserId(userId);
+    }
+
+    @Override
+    public List<ArticleForSearchResponseDTO> getAllArticlePrefix() {
+        ArticleExample articleExample=new ArticleExample();
+        articleExample.createCriteria().andIsActiveEqualTo(1);
+        List<Article> articles = articleMapper.selectByExample(articleExample);
+        List<ArticleForSearchResponseDTO> result=new ArrayList<>(articles.size());
+        articles.forEach(p->{
+            ArticleForSearchResponseDTO response=new ArticleForSearchResponseDTO();
+            response.setArticleUrl("http://localhost:8080/getArticleByArticleId/"+p.getArticleid());
+            response.setValue(p.getArticletitle());
+            result.add(response);
+        });
+        return result;
     }
 }

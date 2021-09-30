@@ -2,6 +2,7 @@ package com.chenhao.web.controllers;
 
 import com.chenhao.dto.BaseResponse;
 import com.chenhao.dto.request.ArticleRequestDTO;
+import com.chenhao.dto.response.ArticleForSearchResponseDTO;
 import com.chenhao.dto.response.ArticleResponse;
 import com.chenhao.dto.response.PageResponse;
 import com.chenhao.service.IArticleService;
@@ -59,5 +60,17 @@ public class ArticleController {
     BaseResponse<Boolean> publishArticle(@RequestBody ArticleRequestDTO requestDTO) throws Exception {
         Boolean aBoolean = articleService.editArticle(requestDTO);
         return new BaseResponse<>(aBoolean);
+    }
+
+    /**
+     * 数据量小的情况下可以前端去做过滤，咱们将数据全部返回给前端，但是数据量多的情况下一定不要这么做
+     * @return
+     */
+    @Log
+    @ApiOperation("获取所有文章简略")
+    @RequestMapping(value = "getAllArticlePrefix", method = RequestMethod.GET)
+    @ResponseBody
+    BaseResponse<List<ArticleForSearchResponseDTO>> getArticlePrefix(){
+        return new BaseResponse<>(articleService.getAllArticlePrefix());
     }
 }
