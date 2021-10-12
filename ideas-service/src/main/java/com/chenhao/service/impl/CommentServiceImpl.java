@@ -1,5 +1,7 @@
 package com.chenhao.service.impl;
 
+import com.chenhao.common.enums.BusinessEnum;
+import com.chenhao.common.exception.BusinessException;
 import com.chenhao.dao.entity.CommentRecord;
 import com.chenhao.dao.entity.CommentRecordExample;
 import com.chenhao.dao.mapper.CommentRecordMapper;
@@ -45,6 +47,7 @@ public class CommentServiceImpl implements ICommentService {
                 response.setId(p.getId());
                 response.setFromId(p.getAnswererid());
                 response.setLikeNum(p.getLikes());
+                response.setIsLike(p.getLikes()>0);
                 response.setFromName(userService.getUserByUserId(p.getAnswererid()).getUsername());
                 response.setFromAvatar(userService.getUserByUserId(p.getAnswererid()).getAvatarimgurl());
                 //获取父级评论下的所有子评论
@@ -88,5 +91,15 @@ public class CommentServiceImpl implements ICommentService {
         record.setCommentcontent(request.getContent());
         record.setPid(request.getParentId()==null?0:request.getParentId());
         return  commentMapper.insertSelective(record)>0;
+    }
+
+    @Override
+    public Boolean addLikes(Long commentId) throws Exception {
+        CommentRecord record = commentMapper.selectByPrimaryKey(commentId);
+        if(record==null){
+            throw new BusinessException(BusinessEnum.NO_COMMENT_EXIST);
+        }
+        record.setLikes(record.getLikes()+1);
+        return commentMapper.updateByPrimaryKey(record)>0;
     }
 }

@@ -39,4 +39,12 @@ public class CommentController {
     BaseResponse<Boolean> AddComments(@RequestBody AddCommentRequestDTO request) throws Exception{
         return new BaseResponse<>(commentService.addComment(request));
     }
+
+    @RequestMapping(value = "addLikes",method = RequestMethod.GET)
+    @Log
+    @ResponseBody
+    @ApiOperation("点赞")
+    BaseResponse<Boolean> addLikes(@RequestParam(value = "commentId") Long commentId) throws Exception{
+        return new BaseResponse<>(commentService.addLikes(commentId));
+    }
 }

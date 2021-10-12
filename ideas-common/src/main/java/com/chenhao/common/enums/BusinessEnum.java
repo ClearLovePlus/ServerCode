@@ -102,7 +102,11 @@ public enum BusinessEnum {
     /**
      * 文章不存在或者已经被删除
      */
-    NO_ARTICLE_EXIST(2015,"该文章不存在或者已经被删除");
+    NO_ARTICLE_EXIST(2015,"该文章不存在或者已经被删除"),
+    /**
+     * 无对应的评论
+     */
+    NO_COMMENT_EXIST(2016,"该评论不存在");
     private Integer code;
     private String  msg;
     BusinessEnum(Integer code,String msg){

@@ -37,6 +37,7 @@ public class CommentResponseDTO {
     private String fromAvatar;
     private Integer likeNum;
     private String content;
+    private Boolean isLike;
 
     /**
      * 该评论下的所有回复

@@ -26,4 +26,13 @@ public interface ICommentService {
      * @throws Exception
      */
     Boolean addComment(AddCommentRequestDTO request) throws Exception;
+
+    /**
+     * 给评论点赞
+     * @param commentId
+     * @return
+     * @throws Exception
+     */
+    Boolean addLikes(Long commentId) throws Exception;
+
 }
