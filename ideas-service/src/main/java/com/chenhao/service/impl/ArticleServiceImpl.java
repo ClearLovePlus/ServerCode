@@ -16,6 +16,7 @@ import com.chenhao.service.IRedisClientService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -37,7 +38,8 @@ public class ArticleServiceImpl implements IArticleService {
     private ArticleMapper articleMapper;
     @Autowired
     private IRedisClientService redisClient;
-
+    @Value("${blog.url}")
+    private String url;
     @Override
     public Boolean validatePermission(String token, Long articleId) throws Exception {
         String o =(String) redisClient.get(String.format(RedisKeyConstants.TOKEN_PREFIX, token));
@@ -114,10 +116,11 @@ public class ArticleServiceImpl implements IArticleService {
         if (request.getId() == null || request.getId() == ZERO) {
             Article newArticle = new Article();
             request.setArticleid(System.currentTimeMillis());
-            request.setArticleurl("http://localhost:8080/getArticleByArticleId/"+request.getArticleid());
+            request.setArticleurl(url+request.getArticleid());
             request.setPublishdate(format.format(new Date()));
             request.setUpdatedate(format.format(new Date()));
             BeanUtils.copyProperties(request, newArticle);
+            newArticle.setAuthorid(request.getAuthorId());
             return articleMapper.insertSelective(newArticle) > 0;
         }
         if (!validatePermission(request.getToken(), request.getArticleid())) {
@@ -147,7 +150,7 @@ public class ArticleServiceImpl implements IArticleService {
         List<ArticleForSearchResponseDTO> result=new ArrayList<>(articles.size());
         articles.forEach(p->{
             ArticleForSearchResponseDTO response=new ArticleForSearchResponseDTO();
-            response.setArticleUrl("http://localhost:8080/getArticleByArticleId/"+p.getArticleid());
+            response.setArticleUrl(url+p.getArticleid());
             response.setValue(p.getArticletitle());
             result.add(response);
         });

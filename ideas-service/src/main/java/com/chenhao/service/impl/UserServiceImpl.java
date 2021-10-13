@@ -53,6 +53,8 @@ public class UserServiceImpl implements IUserService {
         user.setUsername(request.getUserName());
         user.setPhone(request.getPhoneNum());
         user.setPassword(MD5Util.encode(request.getPassword()));
+        user.setIsActive(1);
+        user.setAvatarimgurl("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
         userMapper.insertSelective(user);
         return user.getId();
     }
