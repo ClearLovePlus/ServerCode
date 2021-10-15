@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("logout")
-@Api(value = "登出服务",tags = {"所有的登录方式,一个登出接口"})
+@Api(value = "通用的登出",tags = {"登出服务"})
 public class LogoutController {
 
     @Autowired

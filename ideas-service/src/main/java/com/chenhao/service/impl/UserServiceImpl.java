@@ -1,14 +1,19 @@
 package com.chenhao.service.impl;
 
+import com.chenhao.common.enums.BusinessEnum;
+import com.chenhao.common.exception.BusinessException;
 import com.chenhao.common.utils.HolidayUtil;
 import com.chenhao.common.utils.MD5Util;
 import com.chenhao.dao.entity.User;
 import com.chenhao.dao.entity.UserExample;
 import com.chenhao.dao.mapper.UserMapper;
 import com.chenhao.dto.request.ChangePwdRequestDTO;
+import com.chenhao.dto.request.ChangeRequestDTO;
 import com.chenhao.dto.request.RegisterRequestDTO;
+import com.chenhao.dto.response.UserInfoResponse;
 import com.chenhao.service.IUserService;
 import com.chenhao.service.config.HolidayConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @description:
+ * @description: 用户信息管理
  * @author: chenhao
  * @date: 2021-5-19 10:02
  */
@@ -30,13 +35,14 @@ public class UserServiceImpl implements IUserService {
     private UserMapper userMapper;
     @Autowired
     private HolidayConfig config;
+
     @Override
     public User getUserByUserName(String userName) {
-        UserExample example=new UserExample();
+        UserExample example = new UserExample();
         //根据用户名和有效状态查询用户信息
         example.createCriteria().andUsernameEqualTo(userName).andIsActiveEqualTo(1);
         List<User> users = userMapper.selectByExample(example);
-        if(CollectionUtils.isEmpty(users)){
+        if (CollectionUtils.isEmpty(users)) {
             return null;
         }
         return users.get(0);
@@ -49,7 +55,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Integer addUser(RegisterRequestDTO request) {
-        User user=new User();
+        User user = new User();
         user.setUsername(request.getUserName());
         user.setPhone(request.getPhoneNum());
         user.setPassword(MD5Util.encode(request.getPassword()));
@@ -61,10 +67,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getUserByPhoneNum(String phoneNum) {
-        UserExample example=new UserExample();
+        UserExample example = new UserExample();
         example.createCriteria().andPhoneEqualTo(phoneNum).andIsActiveEqualTo(1);
         List<User> users = userMapper.selectByExampleWithBLOBs(example);
-        if(CollectionUtils.isEmpty(users)){
+        if (CollectionUtils.isEmpty(users)) {
             return null;
         }
         return users.get(0);
@@ -77,8 +83,54 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Boolean isHoliday(Boolean isBroker, String date) throws Exception {
-        List<String> holidaysWithOutWeekends= Arrays.asList(config.getHolidaysWithOutWeekends().split(","));
-        List<String> extraWorkDays=Arrays.asList(config.getExtraWorkDays().split(","));
-        return HolidayUtil.isWorkDay(date,holidaysWithOutWeekends,isBroker,extraWorkDays);
+        List<String> holidaysWithOutWeekends = Arrays.asList(config.getHolidaysWithOutWeekends().split(","));
+        List<String> extraWorkDays = Arrays.asList(config.getExtraWorkDays().split(","));
+        return HolidayUtil.isWorkDay(date, holidaysWithOutWeekends, isBroker, extraWorkDays);
+    }
+
+    @Override
+    public Boolean changeUserInfo(ChangeRequestDTO request) throws Exception {
+        if(request==null || request.getUserId()==null||request.getUserId()==0){
+            throw new BusinessException(BusinessEnum.MISSING_USER_ID_OR_USER_NAME);
+        }
+        User user = userMapper.selectByPrimaryKey(request.getUserId());
+        if (user == null) {
+            throw new BusinessException(BusinessEnum.NO_RECORD);
+        }
+        if (StringUtils.isNotEmpty(request.getAvatarUrl())) {
+            user.setAvatarimgurl(request.getAvatarUrl());
+        }
+        if (StringUtils.isNotEmpty(request.getUserName())) {
+            user.setUsername(request.getUserName());
+        }
+        if (StringUtils.isNotEmpty(request.getEmail())) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.getSex() != null && request.getSex() > 0) {
+            user.setGender(request.getSex() == 1 ? "男" : "女");
+        }
+        if (StringUtils.isNotEmpty(request.getDescription())) {
+            user.setPersonalbrief(request.getDescription());
+        }
+        return userMapper.updateByPrimaryKey(user) > 0;
+    }
+
+    @Override
+    public UserInfoResponse getUserInfo(Integer userId) throws Exception {
+        if(userId==null||userId==0){
+            throw new BusinessException(BusinessEnum.MISSING_USER_ID_OR_USER_NAME);
+        }
+        User userByUserId = this.getUserByUserId(userId);
+        if(userByUserId==null){
+            throw new BusinessException(BusinessEnum.NO_RECORD);
+        }
+        UserInfoResponse response=new UserInfoResponse();
+        response.setUserId(userByUserId.getId());
+        response.setAvatarUrl(userByUserId.getAvatarimgurl());
+        response.setUserName(userByUserId.getUsername());
+        response.setTrueName(userByUserId.getTruename());
+        response.setSex("男".equals(userByUserId.getGender())?1:2);
+        response.setPhone(userByUserId.getPhone());
+        return response;
     }
 }

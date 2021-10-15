@@ -58,9 +58,9 @@ public class ArticleServiceImpl implements IArticleService {
     public List<ArticleResponse> getAllArticle(Integer userId, Integer currentPage) throws Exception {
         ArticleExample articleExample = new ArticleExample();
         if (userId == null||userId==ZERO) {
-            articleExample.createCriteria().andIdGreaterThan(0);
+            articleExample.createCriteria().andIdGreaterThan(0).andIsActiveEqualTo(1);
         } else {
-            articleExample.createCriteria().andAuthoridEqualTo(userId);
+            articleExample.createCriteria().andAuthoridEqualTo(userId).andIsActiveEqualTo(1);
         }
         articleExample.setOrderByClause("publishDate desc");
         RowBounds rowBounds = new RowBounds((currentPage-1)*5, 5);
@@ -87,7 +87,7 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public ArticleResponse getArticleByArticleId(Long articleId) throws Exception {
         ArticleExample articleExample = new ArticleExample();
-        articleExample.createCriteria().andArticleidEqualTo(articleId);
+        articleExample.createCriteria().andArticleidEqualTo(articleId).andIsActiveEqualTo(1);
         List<Article> articles = articleMapper.selectByExampleWithBLOBs(articleExample);
         if (CollectionUtils.isEmpty(articles)) {
             return null;

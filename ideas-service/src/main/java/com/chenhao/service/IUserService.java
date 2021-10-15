@@ -3,7 +3,9 @@ package com.chenhao.service;
 
 import com.chenhao.dao.entity.User;
 import com.chenhao.dto.request.ChangePwdRequestDTO;
+import com.chenhao.dto.request.ChangeRequestDTO;
 import com.chenhao.dto.request.RegisterRequestDTO;
+import com.chenhao.dto.response.UserInfoResponse;
 
 import java.util.Date;
 
@@ -57,4 +59,20 @@ public interface IUserService {
      * @throws Exception
      */
     Boolean isHoliday(Boolean isBroker, String date) throws Exception;
+
+    /**
+     * 修改用户资料
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    Boolean changeUserInfo(ChangeRequestDTO request) throws Exception;
+
+    /**
+     * 获取用户信息，还是用post吧，这样安全
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    UserInfoResponse getUserInfo(Integer userId) throws Exception;
 }
