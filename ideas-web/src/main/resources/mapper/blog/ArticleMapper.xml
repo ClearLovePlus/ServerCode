@@ -497,9 +497,9 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="countByUserId" resultType="java.lang.Long">
-    select count(id) from article
+    select count(id) from article  where  is_active = 1
    <if test="userId != null and userId != 0">
-     where authorId =${userId}
+      and authorId =${userId}
    </if>
   </select>
 </mapper>
