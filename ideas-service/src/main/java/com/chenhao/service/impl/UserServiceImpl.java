@@ -112,7 +112,7 @@ public class UserServiceImpl implements IUserService {
         if (StringUtils.isNotEmpty(request.getDescription())) {
             user.setPersonalbrief(request.getDescription());
         }
-        return userMapper.updateByPrimaryKey(user) > 0;
+        return userMapper.updateByPrimaryKeyWithBLOBs(user) > 0;
     }
 
     @Override
@@ -131,6 +131,8 @@ public class UserServiceImpl implements IUserService {
         response.setTrueName(userByUserId.getTruename());
         response.setSex("男".equals(userByUserId.getGender())?1:2);
         response.setPhone(userByUserId.getPhone());
+        response.setDescription(userByUserId.getPersonalbrief());
+        response.setEmail(userByUserId.getEmail());
         return response;
     }
 }

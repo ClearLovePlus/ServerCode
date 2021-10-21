@@ -17,4 +17,5 @@ public class UserInfoResponse {
     private String description;
     private String avatarUrl;
     private String phone;
+    private String email;
 }
