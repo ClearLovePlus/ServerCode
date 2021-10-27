@@ -1,12 +1,16 @@
-package com.chenhao.api.appender;
+package com.chenhao.common.appender;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.AppenderBase;
-import com.chenhao.api.util.EmailUtils;
+import com.alibaba.fastjson.JSON;
+import com.chenhao.common.utils.EmailUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -61,8 +65,8 @@ public class MonitorAppender extends AppenderBase<ILoggingEvent> {
             public void run() {
                 System.out.println("开始清理数据");
                 int count = errorCountPerMinute.get();
-                if (count > 1) {
-                    EmailUtils.sendEmail();
+                if (count >= 1) {
+                    EmailUtils.sendEmail("OneTheWayHao@gmail.com","邮件系统告警监控", JSON.toJSONString(errorPerMinuteContent));
                 }
                 errorCountPerMinute.set(0);
                 errorPerMinuteContent.clear();

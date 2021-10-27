@@ -4,12 +4,12 @@ package com.chenhao.common.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.Security;
+import javax.mail.Address;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.Properties;
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
 
 /**
  * @description:
@@ -19,7 +19,7 @@ import javax.activation.*;
 public class EmailUtils {
     private static final Logger logger = LoggerFactory.getLogger(EmailUtils.class);
 
-    public static void sendEmail() {
+    public static void sendEmail(String sendTo,String subject,String content) {
         logger.info("发送邮件考试");
         Properties props = new Properties();
         //指定邮件的发送服务器地址
@@ -44,11 +44,11 @@ public class EmailUtils {
             //设置发送的邮件地址
             message.setFrom(fromAddress);
             //设置接收者
-            message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress("OneTheWayHao@gmail.com"));
+            message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(sendTo));
             //设置邮件的主题
-            message.setSubject("test");
+            message.setSubject(subject);
             //设置邮件的内容
-            message.setText("test");
+            message.setText(content);
             //保存邮件
             message.saveChanges();
             //得到发送邮件的服务器(这里用的是smtp服务器)

@@ -36,7 +36,7 @@ public class LocalTokenServiceImpl implements ITokenService {
         TokenResponseDTO tokenResponse=new TokenResponseDTO();
         tokenResponse.setToken(result);
         tokenResponse.setUserId(userId);
-        redisClient.setNx(String.format(RedisKeyConstants.TOKEN_PREFIX,result), JSON.toJSONString(tokenResponse),(long)60*60*1000);
+        redisClient.setNx(String.format(RedisKeyConstants.TOKEN_PREFIX,result), JSON.toJSONString(tokenResponse),(long)60*60*1000*24);
         return result;
     }
 }
