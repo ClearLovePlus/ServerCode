@@ -106,7 +106,19 @@ public enum BusinessEnum {
     /**
      * 无对应的评论
      */
-    NO_COMMENT_EXIST(2016,"该评论不存在");
+    NO_COMMENT_EXIST(2016,"该评论不存在"),
+    /**
+     * 该用户下的标签不存在
+     */
+    CATEGORY_NOT_EXIST(2017,"该用户的标签不存在"),
+    /**
+     * 此文章不属于该用户
+     */
+    ARTICLE_NOT_BELONG_TO_THE_USER(2018,"此文章不属于该用户"),
+    /**
+     * 用户不存在或者用户已被冻结
+     */
+    USER_NOT_EXIST(2019,"用户不存在或者用户已被冻结");
     private Integer code;
     private String  msg;
     BusinessEnum(Integer code,String msg){

@@ -3,11 +3,9 @@ package com.chenhao.dao.mapper;
 import com.chenhao.dao.entity.Categories;
 import com.chenhao.dao.entity.CategoriesExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
-@Mapper
 public interface CategoriesMapper {
     long countByExample(CategoriesExample example);
 
@@ -18,6 +16,8 @@ public interface CategoriesMapper {
     int insert(Categories record);
 
     int insertSelective(Categories record);
+
+    List<Categories> selectByExampleWithRowbounds(CategoriesExample example, RowBounds rowBounds);
 
     List<Categories> selectByExample(CategoriesExample example);
 
@@ -30,4 +30,5 @@ public interface CategoriesMapper {
     int updateByPrimaryKeySelective(Categories record);
 
     int updateByPrimaryKey(Categories record);
+    int insertBatch(List<Categories> collect);
 }

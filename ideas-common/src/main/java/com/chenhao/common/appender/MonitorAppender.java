@@ -6,6 +6,8 @@ import ch.qos.logback.core.AppenderBase;
 import com.alibaba.fastjson.JSON;
 import com.chenhao.common.utils.EmailUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -19,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date: 2021-8-25 17:48
  */
 public class MonitorAppender extends AppenderBase<ILoggingEvent> {
+    private static final Logger logger = LoggerFactory.getLogger(MonitorAppender.class);
     public static final String LEVEL_ERROR = "error";
     /**
      * 接入应用的名称
@@ -27,11 +30,11 @@ public class MonitorAppender extends AppenderBase<ILoggingEvent> {
     /**
      * 每分钟报错汇总
      */
-    private static AtomicInteger errorCountPerMinute=new AtomicInteger(0);
+    private static AtomicInteger errorCountPerMinute = new AtomicInteger(0);
     /**
      * 每分钟的报错内容
      */
-    private static ConcurrentHashMap<String, Throwable> errorPerMinuteContent=new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Throwable> errorPerMinuteContent = new ConcurrentHashMap<>();
 
     public MonitorAppender() {
         startMonitor();
@@ -63,16 +66,16 @@ public class MonitorAppender extends AppenderBase<ILoggingEvent> {
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                System.out.println("开始清理数据");
+                logger.info("开始清理数据,错误数:{}条",errorCountPerMinute.get());
                 int count = errorCountPerMinute.get();
                 if (count >= 1) {
-                    EmailUtils.sendEmail("OneTheWayHao@gmail.com","邮件系统告警监控", JSON.toJSONString(errorPerMinuteContent));
+                    EmailUtils.sendEmail("OneTheWayHao@gmail.com", "邮件系统告警监控", JSON.toJSONString(errorPerMinuteContent));
                 }
                 errorCountPerMinute.set(0);
                 errorPerMinuteContent.clear();
-                System.out.println("结束清理数据");
+                logger.info("结束清理数据,错误数:{}条",errorCountPerMinute.get());
             }
-        }, 1,2, TimeUnit.MINUTES);
+        }, 1, 2, TimeUnit.MINUTES);
     }
 
     public void setAppName(String appName) {

@@ -16,3 +16,13 @@ ALTER table tags add  is_active int(1) default '1';
 ALTER table user add  is_active int(1) default '1';
 ALTER table user_role add  is_active int(1) default '1';
 ALTER table visitor add  is_active int(1) default '1';
+
+CREATE TABLE `category_article_relation` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `category_id` int NOT NULL comment '标签id',
+  `article_id` int NOT NULL comment '文章id',
+  `is_active` int NOT NULL comment '逻辑删除',
+  `createTime` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP comment '生成时间',
+  `updateTime` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 comment '标签-文章关系表';

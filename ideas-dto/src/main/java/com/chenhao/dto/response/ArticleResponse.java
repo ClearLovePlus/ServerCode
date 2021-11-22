@@ -32,4 +32,6 @@ public class ArticleResponse {
     private String articleUrl;
     @ApiModelProperty(value = "作者姓名")
     private String authorName;
+    @ApiModelProperty(value = "文章分类名称")
+    private String categoryName;
 }

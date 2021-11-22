@@ -23,8 +23,6 @@ public class ArticleRequestDTO {
 
     private String articletype;
 
-    private String articlecategories;
-
     private String publishdate;
 
     private String updatedate;
@@ -44,4 +42,5 @@ public class ArticleRequestDTO {
     private String articletabloid;
     private String token;
     private Integer authorId;
+    private String categoryName;
 }

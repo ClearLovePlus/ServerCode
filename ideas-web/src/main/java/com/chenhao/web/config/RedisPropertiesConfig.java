@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @date: 2021-7-7 13:27
  */
 @Configuration
-@Component
+@Component("redisPropertiesConfig")
 public class RedisPropertiesConfig {
     /**
      * sentinel 配置
