@@ -95,7 +95,7 @@ public class BaseJunit {
     public void testEs() throws Exception {
 //        esService.deleteIndex("blog","93Q0oHsBhubEUyMaQ_UK");
         //      esService.insert();
-        //esService.getTest(FunctionUtils::getIndex);
+        esService.getTest(FunctionUtils::getIndex);
         esService.fieldCapabilitiesSearch( new String[]{"blog","indexing"});
 //        esService.bulkTest(FunctionUtils::getTwoDocId,"blog");
     }

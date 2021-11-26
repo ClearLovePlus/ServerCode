@@ -14,17 +14,11 @@ import java.util.Map;
  */
 @Data
 public class TestRequestDTO {
-    @NotNull
     private String  filedString;
-    @NotNull
     private List<Integer> filedList;
-    @NotNull(minValue = 1)
     private Integer filedInteger;
-    @NotNull(minValue = 1)
     private Float filedFloat;
-    @NotNull(minValue = 1)
     private Double filedDouble;
-    @NotNull
     private Map<String,String> filedMap;
 
 }
