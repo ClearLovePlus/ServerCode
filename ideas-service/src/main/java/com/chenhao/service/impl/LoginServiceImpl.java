@@ -6,6 +6,7 @@ import com.chenhao.common.utils.MD5Util;
 import com.chenhao.dao.entity.User;
 import com.chenhao.dto.request.LoginRequestDTO;
 import com.chenhao.dto.response.LoginResponseDTO;
+import com.chenhao.dto.validate.ValidateUtils;
 import com.chenhao.service.BaseLoginService;
 import com.chenhao.service.ILoginWithPwdService;
 import com.chenhao.service.ITokenService;
@@ -32,6 +33,10 @@ public class LoginServiceImpl
 
     @Override
     public LoginResponseDTO loginWithPwd(LoginRequestDTO request) throws Exception {
+        String validateString=super.beforeLogin(request,null);
+        if(!validateString.equals(ValidateUtils.VALID)){
+            throw new BusinessException(2021,validateString);
+        }
         if(StringUtils.isEmpty(request.getPhone())||StringUtils.isEmpty(request.getPassword())){
            throw  new BusinessException(BusinessEnum.PHONE_OR_PWD_IS_NULL);
         }

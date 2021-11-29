@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * @description:
+ * @description: 参数校验类
  * @author: chenhao
  * @date: 2021-11-26 16:10
  */
@@ -19,7 +19,7 @@ public class ValidateUtils {
     private static final Integer MOBILE_LENGTH=11;
     private static final String MOBILE_REGEX="/^1(3\\d|4[5-9]|5[0-35-9]|6[2567]|7[0-8]|8\\d|9[0-35-9])\\d{8}$/";
     private static final String EMAIL_REGEX="";
-    private static final String VALID="valid";
+    public static final String VALID="valid";
     /**
      * 获取对象的所有属性
      * @param clazz
@@ -31,7 +31,7 @@ public class ValidateUtils {
         Assert.notNull(clazz,"the parameter [clazz]  can not be null");
         List<Field> result=new ArrayList<>();
         for(Class superClass=clazz;superClass!=Object.class;superClass=superClass.getSuperclass()){
-            Field[] fields=clazz.getFields();
+            Field[] fields=superClass.getDeclaredFields();
             if(fields.length>EMPTY){
                 result.addAll(Arrays.asList(fields));
             }
@@ -41,15 +41,15 @@ public class ValidateUtils {
 
     /**
      * 字段校验方法
-     * @param object
-     * @param paramsValue
-     * @param ignoreNames
+     * @param object 需要校验的对象
+     * @param paramsValue 待定用的参数map
+     * @param ignoreNames 忽略不用校验的属性
      * @return
      * @throws Exception
      */
     public static String validate(Object object, Map<String,String> paramsValue,String[] ignoreNames) throws Exception{
         List<Field> fields=ValidateUtils.getAllDeclareFields(object.getClass());
-        Map<String,String> tempMap=new HashMap<>(ignoreNames.length);
+        Map<String,String> tempMap=new HashMap<>(ignoreNames==null?4:ignoreNames.length);
         if(ignoreNames!=null&&ignoreNames.length>EMPTY){
             for (String var:ignoreNames){
                 tempMap.put(var, EMPTY_STRING);
@@ -78,34 +78,34 @@ public class ValidateUtils {
                         switch (fieldType){
                             case INT:
                                 if((int)value<((NotNull) annotation).minValue()){
-                                    return fieldName+"'value must greater than "+((NotNull) annotation).minValue();
+                                    return fieldName+" must greater than "+((NotNull) annotation).minValue();
                                 }
                                 if((int)value>((NotNull) annotation).maxValue()){
-                                    return fieldName+"'value must less than "+((NotNull) annotation).minValue();
+                                    return fieldName+" must less than "+((NotNull) annotation).minValue();
                                 }
                                 return VALID;
                             case Long:
                                 if((long)value<((NotNull) annotation).minValue()){
-                                    return fieldName+"'value must greater than "+((NotNull) annotation).minValue();
+                                    return fieldName+" must greater than "+((NotNull) annotation).minValue();
                                 }
                                 if((long)value>((NotNull) annotation).maxValue()){
-                                    return fieldName+"'value must less than "+((NotNull) annotation).minValue();
+                                    return fieldName+" must less than "+((NotNull) annotation).minValue();
                                 }
                                 return VALID;
                             case Double:
                                 if((double)value<((NotNull) annotation).minValue()){
-                                    return fieldName+"'value must greater than "+((NotNull) annotation).minValue();
+                                    return fieldName+" must greater than "+((NotNull) annotation).minValue();
                                 }
                                 if((double)value>((NotNull) annotation).maxValue()){
-                                    return fieldName+"'value must less than "+((NotNull) annotation).minValue();
+                                    return fieldName+" must less than "+((NotNull) annotation).minValue();
                                 }
                                 return VALID;
                             case Mobile:
                                  if(((String) value).length()!=MOBILE_LENGTH){
-                                     return fieldName +"is invalid";
+                                     return fieldName +" is invalid";
                                  }
                                 if(!Pattern.matches(MOBILE_REGEX,(String)value)){
-                                    return fieldName +"is invalid";
+                                    return fieldName +" is invalid";
                                 }
                                 return VALID;
                             case Email:

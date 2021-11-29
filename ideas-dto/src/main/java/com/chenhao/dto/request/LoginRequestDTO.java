@@ -1,5 +1,6 @@
 package com.chenhao.dto.request;
 
+import com.chenhao.dto.annotations.NotNull;
 import lombok.Data;
 
 import java.util.Map;
@@ -11,8 +12,11 @@ import java.util.Map;
  */
 @Data
 public class LoginRequestDTO {
+    @NotNull(type = NotNull.Types.Mobile,required = true)
     private String phone;
+    @NotNull(required = true)
     private String authCode;
+    @NotNull(required = true)
     private String password;
     private Map<String,String> extraInfo;
 }

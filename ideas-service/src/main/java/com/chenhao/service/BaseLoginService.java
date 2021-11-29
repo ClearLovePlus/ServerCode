@@ -8,6 +8,7 @@ import com.chenhao.dao.entity.User;
 import com.chenhao.dto.request.LoginRequestDTO;
 import com.chenhao.dto.response.LoginResponseDTO;
 import com.chenhao.dto.response.TokenResponseDTO;
+import com.chenhao.dto.validate.ValidateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,17 @@ public abstract class BaseLoginService<R, T> {
     private IUserService userService;
     @Autowired
     private IRedisClientService redisClient;
+
+    /**
+     * 前置校验
+     * @param request
+     * @param ignoreNames
+     * @return
+     * @throws Exception
+     */
+    protected String beforeLogin(LoginRequestDTO request,String[] ignoreNames)throws Exception{
+       return ValidateUtils.validate(request,null,ignoreNames);
+    }
 
     /**
      * 登录完成之后的一些动作
