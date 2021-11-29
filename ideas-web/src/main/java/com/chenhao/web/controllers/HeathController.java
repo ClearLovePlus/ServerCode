@@ -1,5 +1,7 @@
 package com.chenhao.web.controllers;
 
+import com.chenhao.common.utils.RateLimiter;
+import com.chenhao.common.utils.RateLimiterThread;
 import com.chenhao.dto.BaseResponse;
 import com.chenhao.dto.request.TestRequestDTO;
 import com.chenhao.service.IRedisClientService;
@@ -40,5 +42,14 @@ public class HeathController {
     @ApiOperation(value = "filedTest")
     public BaseResponse filedCheckTest(@RequestBody TestRequestDTO request) {
         return new BaseResponse(0, "success");
+    }
+
+    @RequestMapping(value = "rate", method = RequestMethod.GET)
+    @ApiOperation(value = "filedTest")
+    public BaseResponse testRateLimiter(){
+        RateLimiter rateLimiter=new RateLimiter(100,2,1000);
+        RateLimiterThread thread=new RateLimiterThread(rateLimiter);
+        thread.run();
+        return new BaseResponse("success");
     }
 }
