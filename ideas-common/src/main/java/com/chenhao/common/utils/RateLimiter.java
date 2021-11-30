@@ -1,11 +1,7 @@
 package com.chenhao.common.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -14,6 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date: 2021-11-29 16:22
  */
 public class RateLimiter {
+
+    private static final Logger logger = LoggerFactory.getLogger(RateLimiter.class);
+
+    private static volatile RateLimiter rateLimiter;
 
     /**
      * 桶中的令牌的最大容量
@@ -28,13 +28,9 @@ public class RateLimiter {
      */
     private final int unitBudget;
     /**
-     * 隔个多少毫秒生成令牌
+     * 隔多少毫秒生成令牌
      */
     private final long timeUnit;
-    /**
-     * 限流器启动的时间
-     */
-    private final long rateLimiterStartTime;
     /**
      * 下一次应该产生令牌的时间
      */
@@ -42,69 +38,123 @@ public class RateLimiter {
     /**
      * 当前令牌桶中令牌为空
      */
-    private static final int EMPTY=0;
+    private static final int EMPTY = 0;
+    /**
+     * 锁对象
+     * 不能锁class,锁了class在锁竞争的过程中 该class的其他方法也会被锁住
+     * 而不是简单的锁住代码块
+     */
+    private final Object lock=new Object();
+
     /**
      * 限流器构造函数
+     *
      * @param budgetCapacity
      */
-    public RateLimiter(int budgetCapacity,int unitBudget,long timeUnit){
-        this.budgetCapacity=new AtomicInteger(budgetCapacity);
-        this.currentCapacity=new AtomicInteger(budgetCapacity);
-        this.unitBudget=unitBudget;
-        this.timeUnit=timeUnit;
-        this.rateLimiterStartTime=System.currentTimeMillis();
-        this.nextCreateBudgetTime=rateLimiterStartTime+timeUnit;
+    private RateLimiter(int budgetCapacity, int unitBudget, long timeUnit) {
+        this.budgetCapacity = new AtomicInteger(budgetCapacity);
+        this.currentCapacity = new AtomicInteger(budgetCapacity);
+        this.unitBudget = unitBudget;
+        this.timeUnit = timeUnit;
+        this.nextCreateBudgetTime = System.currentTimeMillis()+ timeUnit;
+    }
+
+    /**
+     * 单例获取流量控制器
+     * @param budgetCapacity
+     * @param unitBudget
+     * @param timeUnit
+     * @return
+     */
+    public static RateLimiter getInstance(int budgetCapacity, int unitBudget, long timeUnit) {
+        if (rateLimiter == null) {
+            synchronized (RateLimiter.class) {
+                if (rateLimiter == null) {
+                    logger.info("RateLimiter is null,start init==>");
+                    rateLimiter = new RateLimiter(budgetCapacity, unitBudget, timeUnit);
+                    logger.info("RateLimiter is not null,init end==>");
+                    return rateLimiter;
+                }
+            }
+        }
+        return rateLimiter;
     }
 
     /**
      * 获取令牌
+     *
      * @param acquireTokenNum 每次需要获取几个令牌
      * @return
      */
-    public boolean acquire(int acquireTokenNum){
+    public boolean acquire(int acquireTokenNum) {
         //当前准备对外提供的令牌
-        if(acquireTokenNum>this.currentCapacity.get()){
-            return false;
-        }
-        synchronized (this){
-            long currentAcquireTime=System.currentTimeMillis();
+        synchronized (lock) {
+            long currentAcquireTime = System.currentTimeMillis();
+            //按照一定的频率往令牌桶中添加令牌
             this.refreshBudget(currentAcquireTime);
-            if(acquireTokenNum<=currentCapacity.get()){
-                doAcquire(acquireTokenNum);
-                return true;
+            if (acquireTokenNum <= currentCapacity.get()) {
+                return doAcquire(acquireTokenNum);
             }
         }
         return false;
     }
 
     /**
+     * 请求完成后归还令牌
+     * @param tokenNum
+     */
+    public void returnToken(int tokenNum){
+        synchronized (lock){
+            if(this.currentCapacity.get()==this.budgetCapacity.get()){
+                return;
+            }
+            int var=this.currentCapacity.get()+tokenNum;
+            if(var>=this.budgetCapacity.get()){
+                this.currentCapacity=this.budgetCapacity;
+                return;
+            }else {
+                this.currentCapacity.set(var);
+            }
+        }
+    }
+
+    /**
      * 刷新令牌的数量，不用单开一个线程去维护令牌桶的容量
+     *
      * @param acquireTime
      */
-    private void refreshBudget(long acquireTime){
-        if(currentCapacity.get()>=budgetCapacity.get()){
+    private void refreshBudget(long acquireTime) {
+        if (currentCapacity.get() >= budgetCapacity.get()) {
             return;
         }
-        if(acquireTime<this.nextCreateBudgetTime){
+        if (acquireTime < this.nextCreateBudgetTime) {
             return;
         }
-        int futureCapacity=this.currentCapacity.getAndAdd(unitBudget);
-        if(futureCapacity>budgetCapacity.get()){
+        int futureCapacity = this.currentCapacity.get()+unitBudget;
+        if (futureCapacity >= budgetCapacity.get()) {
+            this.currentCapacity=budgetCapacity;
+            this.nextCreateBudgetTime += timeUnit;
             return;
         }
-        this.currentCapacity=new AtomicInteger(futureCapacity);
+        logger.info("开始生成令牌");
+        this.currentCapacity = new AtomicInteger(futureCapacity);
+        logger.info("生成令牌结束,当前令牌数{}", this.currentCapacity.get());
         //刷新下一次啊生成令牌的时间
-        this.nextCreateBudgetTime=nextCreateBudgetTime+timeUnit;
+        this.nextCreateBudgetTime += timeUnit;
     }
 
     /**
      * 真正的获取令牌的方法
+     *
      * @param needTokenNum
      * @return
      */
-    private boolean doAcquire(int needTokenNum){
-        int nextCapacity=this.currentCapacity.get()-needTokenNum;
-        this.currentCapacity=new AtomicInteger(nextCapacity);
+    private boolean doAcquire(int needTokenNum) {
+        if(needTokenNum>this.currentCapacity.get()){
+            return false;
+        }
+        int nextCapacity = this.currentCapacity.get() - needTokenNum;
+        this.currentCapacity = new AtomicInteger(nextCapacity);
         return true;
     }
 }

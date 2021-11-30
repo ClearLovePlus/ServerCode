@@ -44,12 +44,30 @@ public class HeathController {
         return new BaseResponse(0, "success");
     }
 
+    /**
+     * 测试限流控制器 rateLimiter
+     * @return
+     */
     @RequestMapping(value = "rate", method = RequestMethod.GET)
-    @ApiOperation(value = "filedTest")
-    public BaseResponse testRateLimiter(){
-        RateLimiter rateLimiter=new RateLimiter(100,2,1000);
-        RateLimiterThread thread=new RateLimiterThread(rateLimiter);
-        thread.run();
-        return new BaseResponse("success");
+    @ApiOperation(value = "rateLimiterTest")
+    public BaseResponse testRateLimiter() {
+        RateLimiter rateLimiter = RateLimiter.getInstance(100, 20, 100);
+        try {
+            boolean acquire = rateLimiter.acquire(1);
+            if (acquire) {
+                System.out.println("拿到令牌了，可以调用接口");
+                //this code body can do some business logic
+                //do something
+                //return the token that got from previous step
+                rateLimiter.returnToken(1);
+            } else {
+                System.out.println("没拿到令牌了，不能可以调用接口");
+            }
+        } catch (Exception e) {
+            logger.error("出错啦>_<");
+            return new BaseResponse(500,"error");
+        }
+        return new BaseResponse();
+
     }
 }
