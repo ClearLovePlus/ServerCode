@@ -36,8 +36,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     private RedisPropertiesConfig redisPropertiesConfig;
     @Autowired
     private LettucePoolingClientConfiguration lettuceClientConfiguration;
-    @Autowired
-    private RedisSentinelConfiguration redisSentinelConfiguration;
+//    @Autowired
+//    private RedisSentinelConfiguration redisSentinelConfiguration;
     @Autowired
     private RedisStandaloneConfiguration redisStandaloneConfiguration;
 
@@ -45,7 +45,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      * redis 哨兵配置
      * @return
      */
-    @Bean("redisSentinelConfiguration")
+//    @Bean("redisSentinelConfiguration")
     public RedisSentinelConfiguration redisSentinelConfiguration(){
         logger.info("哨兵模式redis配置开始初始化，节点是{}",redisPropertiesConfig.getRedisNode());
         RedisSentinelConfiguration configuration=new RedisSentinelConfiguration();
@@ -115,9 +115,9 @@ public class RedisConfig extends CachingConfigurerSupport {
             case 1:
                 logger.info("单机模式lettuce配置工厂,策略是:单机模式");
                 return new LettuceConnectionFactory(redisStandaloneConfiguration,lettuceClientConfiguration);
-            case 2:
-                logger.info("哨兵模式lettuce配置工厂,策略是：哨兵模式");
-                return new LettuceConnectionFactory(redisSentinelConfiguration,lettuceClientConfiguration);
+//            case 2:
+//                logger.info("哨兵模式lettuce配置工厂,策略是：哨兵模式");
+//                return new LettuceConnectionFactory(redisSentinelConfiguration,lettuceClientConfiguration);
             case 3:
                 logger.info("集群模式尚未配置");
                 return null;

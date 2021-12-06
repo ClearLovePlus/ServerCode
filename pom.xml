@@ -14,6 +14,7 @@
         <module>ideas-web</module>
         <module>ideas-dto</module>
         <module>ideas-service</module>
+        <module>ideas-rpc</module>
     </modules>
 
     <parent>

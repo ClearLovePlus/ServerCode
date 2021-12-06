@@ -41,6 +41,10 @@
             <version>2.6</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.clearLovePlus.project</groupId>
+            <artifactId>ideas-service</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
