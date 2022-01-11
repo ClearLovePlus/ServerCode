@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenhao.dao.mapper.ActMyFlowMapper">
+  <resultMap id="BaseResultMap" type="com.chenhao.dao.entity.ActMyFlow">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="process _id" jdbcType="VARCHAR" property="processId" />
+    <result column="current_instance_id" jdbcType="VARCHAR" property="currentInstanceId" />
+    <result column="biz_id" jdbcType="INTEGER" property="bizId" />
+    <result column="flow_category" jdbcType="INTEGER" property="flowCategory" />
+    <result column="flow_theme" jdbcType="VARCHAR" property="flowTheme" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+    <result column="flow_status" jdbcType="INTEGER" property="flowStatus" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="createby" jdbcType="INTEGER" property="createby" />
+    <result column="updateby" jdbcType="INTEGER" property="updateby" />
+    <result column="createdate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="updatedate" jdbcType="TIMESTAMP" property="updatedate" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_id, `process _id`, current_instance_id, biz_id, flow_category, flow_theme, 
+    description, tenant_id, batch_no, flow_status, remark, createby, updateby, createdate, 
+    updatedate
+  </sql>
+  <select id="selectByExample" parameterType="com.chenhao.dao.entity.ActMyFlowExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from act_my_flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from act_my_flow
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from act_my_flow
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.chenhao.dao.entity.ActMyFlowExample">
+    delete from act_my_flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.chenhao.dao.entity.ActMyFlow">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into act_my_flow (user_id, `process _id`, current_instance_id, 
+      biz_id, flow_category, flow_theme, 
+      description, tenant_id, batch_no, 
+      flow_status, remark, createby, 
+      updateby, createdate, updatedate
+      )
+    values (#{userId,jdbcType=INTEGER}, #{processId,jdbcType=VARCHAR}, #{currentInstanceId,jdbcType=VARCHAR}, 
+      #{bizId,jdbcType=INTEGER}, #{flowCategory,jdbcType=INTEGER}, #{flowTheme,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}, #{batchNo,jdbcType=VARCHAR}, 
+      #{flowStatus,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createby,jdbcType=INTEGER}, 
+      #{updateby,jdbcType=INTEGER}, #{createdate,jdbcType=TIMESTAMP}, #{updatedate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chenhao.dao.entity.ActMyFlow">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into act_my_flow
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="processId != null">
+        `process _id`,
+      </if>
+      <if test="currentInstanceId != null">
+        current_instance_id,
+      </if>
+      <if test="bizId != null">
+        biz_id,
+      </if>
+      <if test="flowCategory != null">
+        flow_category,
+      </if>
+      <if test="flowTheme != null">
+        flow_theme,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="batchNo != null">
+        batch_no,
+      </if>
+      <if test="flowStatus != null">
+        flow_status,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createby != null">
+        createby,
+      </if>
+      <if test="updateby != null">
+        updateby,
+      </if>
+      <if test="createdate != null">
+        createdate,
+      </if>
+      <if test="updatedate != null">
+        updatedate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="processId != null">
+        #{processId,jdbcType=VARCHAR},
+      </if>
+      <if test="currentInstanceId != null">
+        #{currentInstanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizId != null">
+        #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="flowCategory != null">
+        #{flowCategory,jdbcType=INTEGER},
+      </if>
+      <if test="flowTheme != null">
+        #{flowTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null">
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="flowStatus != null">
+        #{flowStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createby != null">
+        #{createby,jdbcType=INTEGER},
+      </if>
+      <if test="updateby != null">
+        #{updateby,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedate != null">
+        #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.chenhao.dao.entity.ActMyFlowExample" resultType="java.lang.Long">
+    select count(*) from act_my_flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update act_my_flow
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.processId != null">
+        `process _id` = #{record.processId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentInstanceId != null">
+        current_instance_id = #{record.currentInstanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bizId != null">
+        biz_id = #{record.bizId,jdbcType=INTEGER},
+      </if>
+      <if test="record.flowCategory != null">
+        flow_category = #{record.flowCategory,jdbcType=INTEGER},
+      </if>
+      <if test="record.flowTheme != null">
+        flow_theme = #{record.flowTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null">
+        tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.batchNo != null">
+        batch_no = #{record.batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flowStatus != null">
+        flow_status = #{record.flowStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createby != null">
+        createby = #{record.createby,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateby != null">
+        updateby = #{record.updateby,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdate != null">
+        createdate = #{record.createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatedate != null">
+        updatedate = #{record.updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update act_my_flow
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      `process _id` = #{record.processId,jdbcType=VARCHAR},
+      current_instance_id = #{record.currentInstanceId,jdbcType=VARCHAR},
+      biz_id = #{record.bizId,jdbcType=INTEGER},
+      flow_category = #{record.flowCategory,jdbcType=INTEGER},
+      flow_theme = #{record.flowTheme,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=VARCHAR},
+      batch_no = #{record.batchNo,jdbcType=VARCHAR},
+      flow_status = #{record.flowStatus,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      createby = #{record.createby,jdbcType=INTEGER},
+      updateby = #{record.updateby,jdbcType=INTEGER},
+      createdate = #{record.createdate,jdbcType=TIMESTAMP},
+      updatedate = #{record.updatedate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenhao.dao.entity.ActMyFlow">
+    update act_my_flow
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="processId != null">
+        `process _id` = #{processId,jdbcType=VARCHAR},
+      </if>
+      <if test="currentInstanceId != null">
+        current_instance_id = #{currentInstanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizId != null">
+        biz_id = #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="flowCategory != null">
+        flow_category = #{flowCategory,jdbcType=INTEGER},
+      </if>
+      <if test="flowTheme != null">
+        flow_theme = #{flowTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null">
+        batch_no = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="flowStatus != null">
+        flow_status = #{flowStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createby != null">
+        createby = #{createby,jdbcType=INTEGER},
+      </if>
+      <if test="updateby != null">
+        updateby = #{updateby,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null">
+        createdate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedate != null">
+        updatedate = #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenhao.dao.entity.ActMyFlow">
+    update act_my_flow
+    set user_id = #{userId,jdbcType=INTEGER},
+      `process _id` = #{processId,jdbcType=VARCHAR},
+      current_instance_id = #{currentInstanceId,jdbcType=VARCHAR},
+      biz_id = #{bizId,jdbcType=INTEGER},
+      flow_category = #{flowCategory,jdbcType=INTEGER},
+      flow_theme = #{flowTheme,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      tenant_id = #{tenantId,jdbcType=VARCHAR},
+      batch_no = #{batchNo,jdbcType=VARCHAR},
+      flow_status = #{flowStatus,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      createby = #{createby,jdbcType=INTEGER},
+      updateby = #{updateby,jdbcType=INTEGER},
+      createdate = #{createdate,jdbcType=TIMESTAMP},
+      updatedate = #{updatedate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="com.chenhao.dao.entity.ActMyFlowExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from act_my_flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

@@ -65,6 +65,9 @@ public class EsClient {
                         httpAsyncClientBuilder.disableAuthCaching();
                         return httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                     }));
+            if(io!=null){
+                io.close();
+            }
         } catch (Exception e) {
             logger.error("初始化esClient异常", e);
         }

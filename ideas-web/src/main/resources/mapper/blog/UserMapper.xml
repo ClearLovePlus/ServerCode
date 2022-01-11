@@ -374,4 +374,7 @@
       is_active = #{isActive,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectWithPage" resultMap="ResultMapWithBLOBs">
+    select * from user
+  </select>
 </mapper>

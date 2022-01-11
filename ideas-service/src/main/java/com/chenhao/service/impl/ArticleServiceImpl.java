@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +38,7 @@ import java.util.List;
  * @date: 2021-9-15 13:25
  */
 @Service("articleService")
+@DependsOn({"categoriesService","articleMapper","redisClient"})
 public class ArticleServiceImpl implements IArticleService {
     private static final Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
     private static final int ZERO = 0;

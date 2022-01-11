@@ -40,6 +40,7 @@ public class MidBackGroundDbConfig {
         SqlSessionFactoryBean bean=new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/blog/*.xml"));
+        bean.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("mybatis.xml"));
         System.out.println("blog datasource init successfully");
         return bean.getObject();
     }

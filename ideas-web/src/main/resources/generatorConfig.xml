@@ -25,9 +25,9 @@
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://123.56.164.61:3306/blog?serverTimezone=GMT%2B8&amp;useSSL=false&amp;autoReconnect=true"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/flowable?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true&amp;useSSL=false"
                         userId="root"
-                        password="123456">
+                        password="root">
             <property name="nullCatalogMeansCurrent" value="true" />
         </jdbcConnection>
 
@@ -65,7 +65,7 @@
 <!--        <table tableName="categories" domainObjectName="Categories" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
 <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
 <!--        </table>-->
-        <table tableName="category_article_relation" domainObjectName="CategoryArticleRelation" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        <table tableName="act_my_flow" domainObjectName="ActMyFlow" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <generatedKey column="id" sqlStatement="Mysql" identity="true" />
         </table>
 <!--        <table tableName="comment_likes_record" domainObjectName="CommentLikesRecord" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->

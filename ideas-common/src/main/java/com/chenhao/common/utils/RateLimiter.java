@@ -2,10 +2,12 @@ package com.chenhao.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.FactoryBean;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @description: 令牌桶限流算法
+ * @description: 令牌桶限流算法，限流器
  * @author: chenhao
  * @date: 2021-11-29 16:22
  */

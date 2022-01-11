@@ -3,10 +3,14 @@ package com.tebonx.mbupservice.web;
 import com.alibaba.fastjson.JSON;
 import com.chenhao.common.utils.EsClient;
 import com.chenhao.common.utils.FunctionUtils;
+import com.chenhao.dao.entity.User;
+import com.chenhao.dao.mapper.UserMapper;
+import com.chenhao.dao.plugin.DefaultRowBounds;
 import com.chenhao.service.IEsService;
 import com.chenhao.service.IRedisClientService;
 import com.chenhao.service.IUserService;
 import com.chenhao.web.BlogApplication;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +53,8 @@ public class BaseJunit {
 
     @Autowired
     private IEsService esService;
+    @Autowired
+    private UserMapper userMapper;
     protected MockMvc mockMvc;
 
 
@@ -98,6 +104,13 @@ public class BaseJunit {
         esService.getTest(FunctionUtils::getIndex);
         esService.fieldCapabilitiesSearch( new String[]{"blog","indexing"});
 //        esService.bulkTest(FunctionUtils::getTwoDocId,"blog");
+    }
+
+    @Test
+    public void testRowBounds() {
+        RowBounds rowBounds=new DefaultRowBounds(1,10);
+        List<User> users = userMapper.selectWithPage(rowBounds);
+        System.out.println(users);
     }
 }
 
