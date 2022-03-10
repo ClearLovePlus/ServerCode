@@ -1,11 +1,14 @@
 package com.chenhao.rpc.common;
 
+import com.chenhao.rpc.common.iface.ICallerInterface;
+import com.chenhao.rpc.common.iface.IRedisExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +18,8 @@ import java.util.Set;
  * @author: chenhao
  * @date: 2022-3-9 14:33
  */
-public class SentinelRedisClient extends BaseRedisClient<JedisSentinelPool> {
-    private static final Logger logger = LoggerFactory.getLogger(SentinelRedisClient.class);
+public class SentinelRedisClientManager extends BaseRedisClient<JedisSentinelPool> implements IRedisExecutor {
+    private static final Logger logger = LoggerFactory.getLogger(SentinelRedisClientManager.class);
     private volatile static JedisSentinelPool jedisSentinelPool;
 
     /**
@@ -49,10 +52,17 @@ public class SentinelRedisClient extends BaseRedisClient<JedisSentinelPool> {
     //是否进行有效性检查
     private static final Boolean TEST_ON_RETURN = true;
 
+    /**
+     * 初始化
+     */
+    public SentinelRedisClientManager() {
+        jedisSentinelPool = init("123.56.164.61", 6379, "123456");
+    }
+
     @Override
     protected JedisSentinelPool init(String ip, Integer port, String pwd) {
         if (jedisSentinelPool == null) {
-            synchronized (SentinelRedisClient.class) {
+            synchronized (SentinelRedisClientManager.class) {
                 if (jedisSentinelPool == null) {
                     logger.info("the progress of creating sentinelRedisClient start");
                     jedisSentinelPool = create(ip, port, pwd);
@@ -91,9 +101,17 @@ public class SentinelRedisClient extends BaseRedisClient<JedisSentinelPool> {
         return jedisSentinelPool;
     }
 
-    public static void main(String[] args) {
-        SentinelRedisClient client=new SentinelRedisClient();
-        JedisSentinelPool init = client.init("127.0.0.1", 6379, "123456");
-        Jedis resource = init.getResource();
+    @Override
+    public void exec(ICallerInterface caller) {
+        Jedis jedis = jedisSentinelPool.getResource();
+        try {
+            logger.info("start call redis");
+            caller.call(jedis);
+        } catch (JedisConnectionException jedisConnectionException) {
+            logger.error("call redis error reCall one time",jedisConnectionException);
+            caller.call(jedis);
+        } finally {
+            jedis.close();
+        }
     }
 }

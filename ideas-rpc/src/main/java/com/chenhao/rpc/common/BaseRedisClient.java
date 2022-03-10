@@ -1,5 +1,7 @@
 package com.chenhao.rpc.common;
 
+import com.chenhao.rpc.common.iface.ICallerInterface;
+
 /**
  * @description:
  * @author: chenhao

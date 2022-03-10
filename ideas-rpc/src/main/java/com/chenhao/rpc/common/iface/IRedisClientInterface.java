@@ -2,6 +2,7 @@ package com.chenhao.rpc.common.iface;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @author: chenhao
  * @date: 2022-3-9 17:09
  */
-public interface IRedisClientInterface<T> {
+public interface IRedisClientInterface {
 
     /**
      * redis command--set
@@ -18,7 +19,7 @@ public interface IRedisClientInterface<T> {
      * @param value
      * @return
      */
-    boolean set(String key,String value);
+    String set(String key,String value);
 
     /**
      * redis command--setNx
@@ -52,6 +53,39 @@ public interface IRedisClientInterface<T> {
      * @return
      */
     long lPushAll(String key, List<String> values);
+
+    /**
+     * redis command--hset
+     * @param mapKey
+     * @param fieldKey
+     * @param fieldValue
+     * @return
+     */
+    long hSet(String mapKey,String fieldKey,String fieldValue);
+
+    /**
+     * redis command--hget
+     * @param mapKey
+     * @param fieldKey
+     * @return
+     */
+    String hGet(String mapKey,String fieldKey);
+
+    /**
+     * redis command--hgetall
+     * @param mapKey
+     * @return
+     */
+    Map<String,String> hGetAll(String mapKey);
+
+    /**
+     * redis command--zAdd
+     * @param key
+     * @param score
+     * @param member
+     * @return
+     */
+    long zAdd(String key,Double score,String member);
 
 
 }

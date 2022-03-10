@@ -1,47 +1,79 @@
 package com.chenhao.rpc.common;
 
+import com.chenhao.rpc.common.iface.ICallerInterface;
+import com.chenhao.rpc.common.iface.IRedisClientInterface;
+import com.chenhao.rpc.common.iface.IRedisExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.exceptions.JedisConnectionException;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @description: 基于纯原生jedis的redis客户端
+ * @description:
  * @author: chenhao
- * @date: 2022-3-9 13:44
+ * @date: 2022-3-10 10:57
  */
-public class SingleRedisClient extends BaseRedisClient<JedisPool> {
+public class SingleRedisClient implements IRedisClientInterface {
     private static final Logger logger= LoggerFactory.getLogger(SingleRedisClient.class);
-    private volatile static JedisPool jedisPool;
 
-
+    private SingleRedisClientManager singleRedisClientManager;
+    /**
+     * 初始化单例模式客户端
+     */
+    public SingleRedisClient() {
+        this.singleRedisClientManager = new SingleRedisClientManager();
+    }
     @Override
-    public JedisPool init(String ip, Integer port, String pwd) {
-        logger.info("====the progress of creating singleRedisClient start=====");
-        if (jedisPool == null) {
-            synchronized (SingleRedisClient.class) {
-                if (jedisPool == null) {
-                    jedisPool = createJedisPool(ip, port, pwd);
-                    logger.info("====the progress of creating singleRedisClient end=====");
-                    return jedisPool;
-                }
-            }
-        }
-        logger.info("====the progress of creating singleRedisClient end=====");
-        return jedisPool;
+    public String set(String key, String value) {
+        RedisResultContent<String> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.set(key,value));
+        });
+        return result.getValue();
     }
 
-    /**
-     * 初始化jedis连接池
-     * @param ip
-     * @param port
-     * @param pwd
-     * @return
-     */
-    private JedisPool createJedisPool(String ip, Integer port, String pwd) {
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(10);
-        jedisPool = new JedisPool(config, ip, port,5000,pwd);
-        return jedisPool;
+    @Override
+    public boolean setNx(String key, String value, Long time, TimeUnit unit) {
+        return false;
+    }
+
+    @Override
+    public String get(String key) {
+        return null;
+    }
+
+    @Override
+    public long lPush(String key, String value) {
+        return 0;
+    }
+
+    @Override
+    public long lPushAll(String key, List<String> values) {
+        return 0;
+    }
+
+    @Override
+    public long hSet(String mapKey, String fieldKey, String fieldValue) {
+        return 0;
+    }
+
+    @Override
+    public String hGet(String mapKey, String fieldKey) {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> hGetAll(String mapKey) {
+        return null;
+    }
+
+    @Override
+    public long zAdd(String key, Double score, String member) {
+        return 0;
     }
 }
