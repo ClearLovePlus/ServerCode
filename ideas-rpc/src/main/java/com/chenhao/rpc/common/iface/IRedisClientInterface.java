@@ -7,7 +7,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @description:
+ * @description:操作redis的接口层，不同模式的redis具体实现类 可以实现这个方法
  * @author: chenhao
  * @date: 2022-3-9 17:09
  */
@@ -26,10 +26,9 @@ public interface IRedisClientInterface {
      * @param key
      * @param value
      * @param time
-     * @param unit
      * @return
      */
-    boolean setNx(String key, String value, Long time, TimeUnit unit);
+    String setNx(String key, String value, int time);
 
     /**
      * redis command--get
@@ -87,5 +86,13 @@ public interface IRedisClientInterface {
      */
     long zAdd(String key,Double score,String member);
 
+    /**
+     * redis command--lRange
+     * @param key
+     * @param start
+     * @param end
+     * @return
+     */
+    List<String> lRange(String key,long start,long end);
 
 }

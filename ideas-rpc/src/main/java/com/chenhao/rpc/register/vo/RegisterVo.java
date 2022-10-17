@@ -11,12 +11,9 @@ public class RegisterVo {
      */
     private String key;
     /**
-     *
+     * 服务的ip
      */
     private String value;
-    private String type;
-    private String password;
-    private boolean hasPwd;
 
     public String getKey() {
         return key;
@@ -32,29 +29,5 @@ public class RegisterVo {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isHasPwd() {
-        return hasPwd;
-    }
-
-    public void setHasPwd(boolean hasPwd) {
-        this.hasPwd = hasPwd;
     }
 }

@@ -1,20 +1,13 @@
 package com.chenhao.rpc.common;
 
-import com.chenhao.rpc.common.iface.ICallerInterface;
 import com.chenhao.rpc.common.iface.IRedisClientInterface;
-import com.chenhao.rpc.common.iface.IRedisExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.exceptions.JedisConnectionException;
-
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
- * @description:
+ * @description: 纯原生方式的单机redis操作类
  * @author: chenhao
  * @date: 2022-3-10 10:57
  */
@@ -38,42 +31,84 @@ public class SingleRedisClient implements IRedisClientInterface {
     }
 
     @Override
-    public boolean setNx(String key, String value, Long time, TimeUnit unit) {
-        return false;
+    public String setNx(String key, String value, int time) {
+        RedisResultContent<String> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.setex(key,time,value));
+        });
+        return result.getValue();
     }
 
     @Override
     public String get(String key) {
-        return null;
+        RedisResultContent<String> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.get(key));
+        });
+        return result.getValue();
     }
 
     @Override
     public long lPush(String key, String value) {
-        return 0;
+        RedisResultContent<Long> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.lpushx(key, value));
+        });
+        return result.getValue();
     }
 
     @Override
     public long lPushAll(String key, List<String> values) {
-        return 0;
+        RedisResultContent<Long> result=new RedisResultContent<>();
+        String[] params=values.toArray(new String[0]);
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.lpush(key,params));
+        });
+        return result.getValue();
     }
 
     @Override
     public long hSet(String mapKey, String fieldKey, String fieldValue) {
-        return 0;
+        RedisResultContent<Long> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.hset(fieldKey,fieldKey,fieldValue));
+        });
+        return result.getValue();
     }
 
     @Override
     public String hGet(String mapKey, String fieldKey) {
-        return null;
+        RedisResultContent<String> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.hget(mapKey,fieldKey));
+        });
+        return result.getValue();
     }
 
     @Override
     public Map<String, String> hGetAll(String mapKey) {
-        return null;
+        RedisResultContent<Map<String,String>> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.hgetAll(mapKey));
+        });
+        return result.getValue();
     }
 
     @Override
     public long zAdd(String key, Double score, String member) {
-        return 0;
+        RedisResultContent<Long> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.zadd(key,score,member));
+        });
+        return result.getValue();
+    }
+
+    @Override
+    public List<String> lRange(String key,long start, long end) {
+        RedisResultContent<List<String>> result=new RedisResultContent<>();
+        singleRedisClientManager.exec(jedis -> {
+            result.setValue(jedis.lrange(key,start,end));
+        });
+        return result.getValue();
     }
 }
