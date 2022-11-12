@@ -152,12 +152,14 @@ public class ArticleServiceImpl implements IArticleService {
         article.setArticletitle(request.getArticletitle());
         article.setArticletabloid(request.getArticletabloid());
         article.setUpdatedate(format.format(new Date()));
-        if (!article.getArticlecategories().equals(request.getCategoryName()) && !StringUtils.isEmpty(request.getCategoryName())) {
-            if (checkCategory(request.getCategoryName(), request.getAuthorId())) {
-                logger.info("文章标签由{}替换成{}",article.getArticlecategories(),request.getCategoryName());
-                article.setArticlecategories(request.getCategoryName());
-            }
-        }
+        article.setArticlecategories(categoriesService.getDefault().getCategoryname());
+        //文章分类问题暂时修改
+//        if (!article.getArticlecategories().equals(request.getCategoryName()) && !StringUtils.isEmpty(request.getCategoryName())) {
+//            if (checkCategory(request.getCategoryName(), request.getAuthorId())) {
+//                logger.info("文章标签由{}替换成{}",article.getArticlecategories(),request.getCategoryName());
+//                article.setArticlecategories(request.getCategoryName());
+//            }
+//        }
         return articleMapper.updateByPrimaryKeyWithBLOBs(article) > 0;
     }
 
