@@ -9,6 +9,7 @@ import com.chenhao.dto.request.AddCommentRequestDTO;
 import com.chenhao.dto.response.CommentResponseDTO;
 import com.chenhao.dto.response.ReplyResponseDTO;
 import com.chenhao.service.ICommentService;
+import com.chenhao.service.IRedisClientService;
 import com.chenhao.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,34 +31,45 @@ public class CommentServiceImpl implements ICommentService {
     private CommentRecordMapper commentMapper;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IRedisClientService redisClient;
+    /**
+     * 未读评论的前缀
+     */
+    private static final String UN_READ_COMMENTS_PREFIX = "unReadComments|%s";
+    /**
+     * 未读点赞前缀
+     */
+    private static final String UN_READ_LIKES_PREFIX = "unReadLikes|%s";
+
     @Override
     public List<CommentResponseDTO> getArticleComment(Long articleId) throws Exception {
-        CommentRecordExample example=new CommentRecordExample();
+        CommentRecordExample example = new CommentRecordExample();
         example.createCriteria().andArticleidEqualTo(articleId).andPidEqualTo(0L);
         //先查出归属于文章的所有评论
         List<CommentRecord> commentRecords = commentMapper.selectByExampleWithBLOBs(example);
-        List<CommentResponseDTO> result=new ArrayList<>();
-        if(commentRecords!=null&&commentRecords.size()>0){
+        List<CommentResponseDTO> result = new ArrayList<>();
+        if (commentRecords != null && commentRecords.size() > 0) {
             //获取所有的一级评论
-            commentRecords.forEach(p->{
-                CommentResponseDTO response=new CommentResponseDTO();
+            commentRecords.forEach(p -> {
+                CommentResponseDTO response = new CommentResponseDTO();
                 response.setContent(p.getCommentcontent());
                 response.setDate(p.getCommentdate());
                 response.setOwnerId(p.getArticleid().toString());
                 response.setId(p.getId());
                 response.setFromId(p.getAnswererid());
                 response.setLikeNum(p.getLikes());
-                response.setIsLike(p.getLikes()>0);
+                response.setIsLike(p.getLikes() > 0);
                 response.setFromName(userService.getUserByUserId(p.getAnswererid()).getUsername());
                 response.setFromAvatar(userService.getUserByUserId(p.getAnswererid()).getAvatarimgurl());
                 //获取父级评论下的所有子评论
-                CommentRecordExample reply=new CommentRecordExample();
+                CommentRecordExample reply = new CommentRecordExample();
                 reply.createCriteria().andPidEqualTo(p.getId());
                 List<CommentRecord> replyRecords = commentMapper.selectByExampleWithBLOBs(reply);
-                if(replyRecords!=null&&replyRecords.size()>0){
-                    List<ReplyResponseDTO> replyResult=new ArrayList<>();
-                    replyRecords.forEach(t->{
-                        ReplyResponseDTO replyResponse=new ReplyResponseDTO();
+                if (replyRecords != null && replyRecords.size() > 0) {
+                    List<ReplyResponseDTO> replyResult = new ArrayList<>();
+                    replyRecords.forEach(t -> {
+                        ReplyResponseDTO replyResponse = new ReplyResponseDTO();
                         replyResponse.setId(t.getId());
                         replyResponse.setCommentId(p.getId());
                         replyResponse.setDate(t.getCommentdate());
@@ -81,25 +93,39 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public Boolean addComment(AddCommentRequestDTO request) throws Exception {
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        CommentRecord record=new CommentRecord();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        CommentRecord record = new CommentRecord();
         record.setAnswererid(request.getFromId());
         record.setLikes(0);
         record.setCommentdate(format.format(new Date()));
         record.setArticleid(request.getArticleId());
-        record.setRespondentid(request.getToId()==null?0:request.getToId());
+        record.setRespondentid(request.getToId() == null ? 0 : request.getToId());
         record.setCommentcontent(request.getContent());
-        record.setPid(request.getParentId()==null?0:request.getParentId());
-        return  commentMapper.insertSelective(record)>0;
+        record.setPid(request.getParentId() == null ? 0 : request.getParentId());
+        return commentMapper.insertSelective(record) > 0;
     }
 
     @Override
     public Boolean addLikes(Long commentId) throws Exception {
         CommentRecord record = commentMapper.selectByPrimaryKey(commentId);
-        if(record==null){
+        if (record == null) {
             throw new BusinessException(BusinessEnum.NO_COMMENT_EXIST);
         }
-        record.setLikes(record.getLikes()+1);
-        return commentMapper.updateByPrimaryKey(record)>0;
+        record.setLikes(record.getLikes() + 1);
+        return commentMapper.updateByPrimaryKey(record) > 0;
+    }
+
+    /**
+     * 新增redis中的点赞或者评论数
+     * @param record
+     */
+    private void increaseLikeOrComment(CommentRecord record, int type) {
+        switch (type) {
+            case 1:
+                redisClient.getRedisTemplate().opsForHash().put(String.format(UN_READ_COMMENTS_PREFIX, record.getRespondentid()), record.getAnswererid(), record.getCommentcontent());
+            case 2:
+                redisClient.getRedisTemplate().opsForHash().put(String.format(UN_READ_LIKES_PREFIX, record.getRespondentid()), record.getArticleid(), record.getAnswererid());
+            default:
+        }
     }
 }

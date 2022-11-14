@@ -97,7 +97,7 @@ public class RedisRegisterClient {
             return result;
         }
         //说明本地缓存的注册表中没找到对应的服务，需要从远程获取
-
+       return null;
     }
 
 }
