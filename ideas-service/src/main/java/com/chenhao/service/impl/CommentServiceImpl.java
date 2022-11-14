@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @description:评论服务
@@ -42,6 +40,14 @@ public class CommentServiceImpl implements ICommentService {
      */
     private static final String UN_READ_LIKES_PREFIX = "unReadLikes|%s";
 
+    /**
+     * 评论
+     */
+    private static final int COMMENT=1;
+    /**
+     * 点赞
+     */
+    private static final int LIKE=2;
     @Override
     public List<CommentResponseDTO> getArticleComment(Long articleId) throws Exception {
         CommentRecordExample example = new CommentRecordExample();
@@ -102,7 +108,10 @@ public class CommentServiceImpl implements ICommentService {
         record.setRespondentid(request.getToId() == null ? 0 : request.getToId());
         record.setCommentcontent(request.getContent());
         record.setPid(request.getParentId() == null ? 0 : request.getParentId());
-        return commentMapper.insertSelective(record) > 0;
+        int result=commentMapper.insertSelective(record);
+        //缓存中增加未标识
+        increaseLikeOrComment(record,1);
+        return result > 0;
     }
 
     @Override
@@ -112,7 +121,28 @@ public class CommentServiceImpl implements ICommentService {
             throw new BusinessException(BusinessEnum.NO_COMMENT_EXIST);
         }
         record.setLikes(record.getLikes() + 1);
-        return commentMapper.updateByPrimaryKey(record) > 0;
+        int addLike=commentMapper.updateByPrimaryKey(record);
+        //增加点赞未读标识
+        increaseLikeOrComment(record,2);
+        return addLike> 0;
+    }
+
+    @Override
+    public int getUnReadInfo(Integer type,Long userId) throws Exception {
+        if(type==COMMENT){
+            Map<Object, Object> entries = redisClient.getRedisTemplate().opsForHash().entries(String.format(UN_READ_COMMENTS_PREFIX, userId));
+            return entries.size();
+        }
+        if(type==LIKE){
+            Map<Object, Object> entries = redisClient.getRedisTemplate().opsForHash().entries(String.format(UN_READ_LIKES_PREFIX, userId));
+            return entries.size();
+        }
+        return 0;
+    }
+
+    @Override
+    public int getAllUnReadInfo(Long userId) throws Exception {
+        return getUnReadInfo(COMMENT,userId)+getUnReadInfo(LIKE,userId);
     }
 
     /**

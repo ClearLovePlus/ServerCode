@@ -35,4 +35,22 @@ public interface ICommentService {
      */
     Boolean addLikes(Long commentId) throws Exception;
 
+    /**
+     * 获取未读的点赞或者评论
+     * 1：获取未读评论
+     * 2：获取未读点赞
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    int getUnReadInfo(Integer type,Long userId) throws Exception;
+
+    /**
+     * 获取所有未读信息
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    int getAllUnReadInfo(Long userId) throws Exception;
+
 }

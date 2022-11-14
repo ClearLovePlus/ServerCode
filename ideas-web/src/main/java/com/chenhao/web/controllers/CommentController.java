@@ -47,4 +47,20 @@ public class CommentController {
     BaseResponse<Boolean> addLikes(@RequestParam(value = "commentId") Long commentId) throws Exception{
         return new BaseResponse<>(commentService.addLikes(commentId));
     }
+
+    @RequestMapping(value = "getUnReadInfo",method = RequestMethod.GET)
+    @Log
+    @ResponseBody
+    @ApiOperation("获取未读信息")
+    BaseResponse<Integer> getUnReadInfo(@RequestParam(value = "userId") Long userId,@RequestParam(value = "type") Integer type) throws Exception{
+        return new BaseResponse<>(commentService.getUnReadInfo(type,userId));
+    }
+
+    @RequestMapping(value = "getAllUnReadInfo",method = RequestMethod.GET)
+    @Log
+    @ResponseBody
+    @ApiOperation("获取所有未读信息")
+    BaseResponse<Integer> getUnAllReadInfo(@RequestParam(value = "userId") Long userId) throws Exception{
+        return new BaseResponse<>(commentService.getAllUnReadInfo(userId));
+    }
 }
