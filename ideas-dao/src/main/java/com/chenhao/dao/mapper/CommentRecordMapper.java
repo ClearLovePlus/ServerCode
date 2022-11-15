@@ -1,5 +1,6 @@
 package com.chenhao.dao.mapper;
 
+import com.chenhao.dao.entity.CommentDetail;
 import com.chenhao.dao.entity.CommentRecord;
 import com.chenhao.dao.entity.CommentRecordExample;
 import java.util.List;
@@ -36,4 +37,18 @@ public interface CommentRecordMapper {
     int updateByPrimaryKeyWithBLOBs(CommentRecord record);
 
     int updateByPrimaryKey(CommentRecord record);
+
+    /**
+     * 查询评论详情
+     * @param ids
+     * @return
+     */
+    List<CommentDetail> selectCommentDetail(@Param("ids") List<Long> ids);
+
+    /**
+     * 查询点赞详情
+     * @param userIds
+     * @return
+     */
+    List<CommentDetail> selectLikeDetail(@Param("userIds") List<Long> userIds);
 }

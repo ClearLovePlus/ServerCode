@@ -1,5 +1,6 @@
 package com.chenhao.service.impl;
 
+import com.chenhao.common.constants.BusinessConstant;
 import com.chenhao.common.enums.BusinessEnum;
 import com.chenhao.common.exception.BusinessException;
 import com.chenhao.dao.entity.CommentRecord;
@@ -7,6 +8,8 @@ import com.chenhao.dao.entity.CommentRecordExample;
 import com.chenhao.dao.mapper.CommentRecordMapper;
 import com.chenhao.dto.request.AddCommentRequestDTO;
 import com.chenhao.dto.response.CommentResponseDTO;
+import com.chenhao.dto.response.CommentWebSocketContent;
+import com.chenhao.dto.response.CommentWebSocketResponseDTO;
 import com.chenhao.dto.response.ReplyResponseDTO;
 import com.chenhao.service.ICommentService;
 import com.chenhao.service.IRedisClientService;
@@ -43,15 +46,21 @@ public class CommentServiceImpl implements ICommentService {
     /**
      * 评论
      */
-    private static final int COMMENT=1;
+    private static final int COMMENT = 1;
     /**
      * 点赞
      */
-    private static final int LIKE=2;
+    private static final int LIKE = 2;
+    /**
+     * 全部
+     */
+    private static final int ALL = 3;
+
     @Override
     public List<CommentResponseDTO> getArticleComment(Long articleId) throws Exception {
         CommentRecordExample example = new CommentRecordExample();
         example.createCriteria().andArticleidEqualTo(articleId).andPidEqualTo(0L);
+        example.setOrderByClause("commentDate desc");
         //先查出归属于文章的所有评论
         List<CommentRecord> commentRecords = commentMapper.selectByExampleWithBLOBs(example);
         List<CommentResponseDTO> result = new ArrayList<>();
@@ -72,6 +81,7 @@ public class CommentServiceImpl implements ICommentService {
                 CommentRecordExample reply = new CommentRecordExample();
                 reply.createCriteria().andPidEqualTo(p.getId());
                 List<CommentRecord> replyRecords = commentMapper.selectByExampleWithBLOBs(reply);
+                reply.setOrderByClause("commentDate desc");
                 if (replyRecords != null && replyRecords.size() > 0) {
                     List<ReplyResponseDTO> replyResult = new ArrayList<>();
                     replyRecords.forEach(t -> {
@@ -108,9 +118,9 @@ public class CommentServiceImpl implements ICommentService {
         record.setRespondentid(request.getToId() == null ? 0 : request.getToId());
         record.setCommentcontent(request.getContent());
         record.setPid(request.getParentId() == null ? 0 : request.getParentId());
-        int result=commentMapper.insertSelective(record);
+        int result = commentMapper.insertSelective(record);
         //缓存中增加未标识
-        increaseLikeOrComment(record,1);
+        increaseLikeOrComment(record, 1);
         return result > 0;
     }
 
@@ -121,40 +131,59 @@ public class CommentServiceImpl implements ICommentService {
             throw new BusinessException(BusinessEnum.NO_COMMENT_EXIST);
         }
         record.setLikes(record.getLikes() + 1);
-        int addLike=commentMapper.updateByPrimaryKey(record);
+        int addLike = commentMapper.updateByPrimaryKey(record);
         //增加点赞未读标识
-        increaseLikeOrComment(record,2);
-        return addLike> 0;
+        increaseLikeOrComment(record, 2);
+        return addLike > 0;
     }
 
     @Override
-    public int getUnReadInfo(Integer type,Long userId) throws Exception {
-        if(type==COMMENT){
-            Map<Object, Object> entries = redisClient.getRedisTemplate().opsForHash().entries(String.format(UN_READ_COMMENTS_PREFIX, userId));
-            return entries.size();
+    public int getUnReadInfo(Integer type, Long userId) throws Exception {
+        if (type == COMMENT) {
+          return (Integer) redisClient.get(String.format(UN_READ_COMMENTS_PREFIX, userId));
         }
-        if(type==LIKE){
-            Map<Object, Object> entries = redisClient.getRedisTemplate().opsForHash().entries(String.format(UN_READ_LIKES_PREFIX, userId));
-            return entries.size();
+        if (type == LIKE) {
+            return (Integer) redisClient.get(String.format(UN_READ_LIKES_PREFIX, userId));
         }
         return 0;
     }
 
     @Override
     public int getAllUnReadInfo(Long userId) throws Exception {
-        return getUnReadInfo(COMMENT,userId)+getUnReadInfo(LIKE,userId);
+        return getUnReadInfo(COMMENT, userId) + getUnReadInfo(LIKE, userId);
+    }
+
+    @Override
+    public CommentWebSocketResponseDTO commentUnReadInfoForWebSocket(Integer type, Long userId) throws Exception {
+        CommentWebSocketResponseDTO response = new CommentWebSocketResponseDTO();
+        if (null == userId || BusinessConstant.ILLEGAl_USER_ID == userId) {
+            return response;
+        }
+        response.setAllUnReadCount(this.getAllUnReadInfo(userId));
+        List<CommentWebSocketContent> commentContent;
+        List<CommentWebSocketContent> likeContent;
+        if (COMMENT == type || ALL == type) {
+
+        }
+        return null;
     }
 
     /**
      * 新增redis中的点赞或者评论数
+     *
      * @param record
      */
     private void increaseLikeOrComment(CommentRecord record, int type) {
         switch (type) {
             case 1:
-                redisClient.getRedisTemplate().opsForHash().put(String.format(UN_READ_COMMENTS_PREFIX, record.getRespondentid()), record.getAnswererid(), record.getCommentcontent());
+                //新增未读评论+1
+                redisClient.getRedisTemplate().opsForValue().increment(String.format(UN_READ_COMMENTS_PREFIX, record.getRespondentid()));
+                redisClient.getRedisTemplate().opsForHash().put(String.format(UN_READ_COMMENTS_PREFIX, record.getRespondentid()), record.getId(), record.getCommentcontent());
+                break;
             case 2:
+                redisClient.getRedisTemplate().opsForValue().increment(String.format(UN_READ_LIKES_PREFIX, record.getRespondentid()));
                 redisClient.getRedisTemplate().opsForHash().put(String.format(UN_READ_LIKES_PREFIX, record.getRespondentid()), record.getArticleid(), record.getAnswererid());
+                break;
             default:
         }
     }

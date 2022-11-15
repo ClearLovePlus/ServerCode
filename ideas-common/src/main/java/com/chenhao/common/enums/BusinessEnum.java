@@ -118,7 +118,11 @@ public enum BusinessEnum {
     /**
      * 用户不存在或者用户已被冻结
      */
-    USER_NOT_EXIST(2019,"用户不存在或者用户已被冻结");
+    USER_NOT_EXIST(2019,"用户不存在或者用户已被冻结"),
+    /**
+     * 不合法的用户消息
+     */
+    ILLEGAL_USER_ID(2020,"不合法的用户ID");
     private Integer code;
     private String  msg;
     BusinessEnum(Integer code,String msg){

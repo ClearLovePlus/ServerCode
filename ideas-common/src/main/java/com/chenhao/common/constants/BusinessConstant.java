@@ -70,4 +70,8 @@ public class BusinessConstant {
      * 文档文件夹
      */
     public final static String DOCUMENT="document";
+    /**
+     * 不合法的用户id
+     */
+    public final static long ILLEGAl_USER_ID=0L;
 }

@@ -2,6 +2,7 @@ package com.chenhao.service;
 
 import com.chenhao.dto.request.AddCommentRequestDTO;
 import com.chenhao.dto.response.CommentResponseDTO;
+import com.chenhao.dto.response.CommentWebSocketResponseDTO;
 
 import java.util.List;
 
@@ -53,4 +54,12 @@ public interface ICommentService {
      */
     int getAllUnReadInfo(Long userId) throws Exception;
 
+    /**
+     * 为websocket写的获取未读信息接口
+     * @param type
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    CommentWebSocketResponseDTO commentUnReadInfoForWebSocket(Integer type,Long userId) throws Exception;
 }
