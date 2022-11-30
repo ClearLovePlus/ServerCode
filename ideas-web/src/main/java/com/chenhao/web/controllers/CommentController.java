@@ -52,7 +52,7 @@ public class CommentController {
     @Log
     @ResponseBody
     @ApiOperation("获取未读信息")
-    BaseResponse<Integer> getUnReadInfo(@RequestParam(value = "userId") Long userId,@RequestParam(value = "type") Integer type) throws Exception{
+    BaseResponse<Integer> getUnReadInfo(@RequestParam(value = "userId") Integer userId,@RequestParam(value = "type") Integer type) throws Exception{
         return new BaseResponse<>(commentService.getUnReadInfo(type,userId));
     }
 
@@ -60,7 +60,7 @@ public class CommentController {
     @Log
     @ResponseBody
     @ApiOperation("获取所有未读信息")
-    BaseResponse<Integer> getUnAllReadInfo(@RequestParam(value = "userId") Long userId) throws Exception{
+    BaseResponse<Integer> getUnAllReadInfo(@RequestParam(value = "userId") Integer userId) throws Exception{
         return new BaseResponse<>(commentService.getAllUnReadInfo(userId));
     }
 }

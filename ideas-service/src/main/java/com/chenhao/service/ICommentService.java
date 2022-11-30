@@ -44,7 +44,7 @@ public interface ICommentService {
      * @return
      * @throws Exception
      */
-    int getUnReadInfo(Integer type,Long userId) throws Exception;
+    int getUnReadInfo(Integer type,Integer userId) throws Exception;
 
     /**
      * 获取所有未读信息
@@ -52,7 +52,7 @@ public interface ICommentService {
      * @return
      * @throws Exception
      */
-    int getAllUnReadInfo(Long userId) throws Exception;
+    int getAllUnReadInfo(Integer userId) throws Exception;
 
     /**
      * 为websocket写的获取未读信息接口
@@ -61,5 +61,5 @@ public interface ICommentService {
      * @return
      * @throws Exception
      */
-    CommentWebSocketResponseDTO commentUnReadInfoForWebSocket(Integer type,Long userId) throws Exception;
+    CommentWebSocketResponseDTO commentUnReadInfoForWebSocket(Integer type,Integer userId) throws Exception;
 }

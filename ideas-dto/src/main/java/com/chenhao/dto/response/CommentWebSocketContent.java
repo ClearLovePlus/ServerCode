@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class CommentWebSocketContent {
-    private String  formName;
+    private String  fromName;
     private String  articleName;
     private String  commentAbbreviation;
 }
